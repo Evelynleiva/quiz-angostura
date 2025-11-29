@@ -1,0 +1,97 @@
+INFO 2025-11-23 02:33:36,445 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 02:33:43,666 basehttp "GET / HTTP/1.1" 200 10681
+INFO 2025-11-23 02:46:51,790 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 02:46:56,144 basehttp "GET / HTTP/1.1" 200 10681
+INFO 2025-11-23 02:47:00,556 basehttp "GET / HTTP/1.1" 200 10681
+INFO 2025-11-23 02:47:19,256 basehttp "GET / HTTP/1.1" 200 10681
+INFO 2025-11-23 02:47:36,129 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-11-23 02:47:36,324 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4226
+INFO 2025-11-23 02:47:36,432 basehttp - Broken pipe from ('127.0.0.1', 61300)
+WARNING 2025-11-23 02:47:36,495 log Not Found: /favicon.ico
+WARNING 2025-11-23 02:47:36,495 basehttp "GET /favicon.ico HTTP/1.1" 404 2110
+INFO 2025-11-23 02:48:57,992 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-11-23 02:48:58,039 basehttp "GET /admin/ HTTP/1.1" 200 11568
+INFO 2025-11-23 02:48:58,102 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-11-23 02:48:58,104 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-11-23 02:51:16,365 autoreload C:\PROYECTOS\QuizAngostura\authentication\admin.py changed, reloading.
+INFO 2025-11-23 13:40:59,115 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 13:41:25,775 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 13:43:10,736 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 13:44:25,812 autoreload Watching for file changes with StatReloader
+WARNING 2025-11-23 13:44:34,797 log Not Found: /
+WARNING 2025-11-23 13:44:34,798 basehttp "GET / HTTP/1.1" 404 2718
+WARNING 2025-11-23 13:44:34,996 log Not Found: /favicon.ico
+INFO 2025-11-23 13:44:34,997 basehttp - Broken pipe from ('127.0.0.1', 61814)
+INFO 2025-11-23 13:45:18,865 basehttp "GET /api/quizzes/ HTTP/1.1" 200 5800
+INFO 2025-11-23 13:45:19,213 basehttp "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3426
+INFO 2025-11-23 13:45:19,216 basehttp "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2025-11-23 13:45:19,229 basehttp "GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+INFO 2025-11-23 13:45:19,236 basehttp "GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+INFO 2025-11-23 13:45:19,278 basehttp "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3796
+INFO 2025-11-23 13:45:19,278 basehttp "GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1793
+INFO 2025-11-23 13:45:19,287 basehttp "GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+INFO 2025-11-23 13:45:19,298 basehttp "GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+INFO 2025-11-23 13:45:19,317 basehttp "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 200 59
+INFO 2025-11-23 13:45:19,317 basehttp "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+INFO 2025-11-23 13:45:19,336 basehttp "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2025-11-23 13:45:19,362 basehttp "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-11-23 13:45:34,474 basehttp "GET /admin/ HTTP/1.1" 200 11591
+INFO 2025-11-23 13:45:34,639 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-11-23 13:45:34,643 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+WARNING 2025-11-23 13:45:47,976 log Unauthorized: /api/quizzes/activos/
+WARNING 2025-11-23 13:45:47,977 basehttp "GET /api/quizzes/activos/ HTTP/1.1" 401 5293
+WARNING 2025-11-23 13:45:56,600 log Unauthorized: /api/codigos-qr/
+WARNING 2025-11-23 13:45:56,602 basehttp "GET /api/codigos-qr/ HTTP/1.1" 401 5210
+WARNING 2025-11-23 13:46:05,042 log Unauthorized: /api/codigos-qr/
+WARNING 2025-11-23 13:46:05,044 basehttp "GET /api/codigos-qr/ HTTP/1.1" 401 5210
+WARNING 2025-11-23 13:46:13,969 log Unauthorized: /api/codigos-qr/
+WARNING 2025-11-23 13:46:13,970 basehttp "GET /api/codigos-qr/ HTTP/1.1" 401 5210
+INFO 2025-11-23 14:42:12,182 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 14:42:16,762 basehttp "GET / HTTP/1.1" 200 896
+WARNING 2025-11-23 14:42:17,043 log Not Found: /favicon.ico
+WARNING 2025-11-23 14:42:17,044 basehttp "GET /favicon.ico HTTP/1.1" 404 2886
+INFO 2025-11-23 14:45:49,361 autoreload C:\PROYECTOS\QuizAngostura\config\urls.py changed, reloading.
+INFO 2025-11-23 14:45:50,356 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 17:53:44,606 autoreload C:\PROYECTOS\QuizAngostura\config\urls.py changed, reloading.
+INFO 2025-11-23 17:53:46,599 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 17:54:10,692 autoreload C:\PROYECTOS\QuizAngostura\config\urls.py changed, reloading.
+INFO 2025-11-23 17:54:12,441 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 17:54:20,306 autoreload C:\PROYECTOS\QuizAngostura\config\urls.py changed, reloading.
+INFO 2025-11-23 17:54:21,664 autoreload Watching for file changes with StatReloader
+INFO 2025-11-23 17:54:25,434 basehttp "GET / HTTP/1.1" 200 917
+WARNING 2025-11-23 17:54:25,943 log Not Found: /favicon.ico
+WARNING 2025-11-23 17:54:25,943 basehttp "GET /favicon.ico HTTP/1.1" 404 2886
+INFO 2025-11-25 20:43:14,379 autoreload Watching for file changes with StatReloader
+INFO 2025-11-25 20:43:17,928 basehttp "GET / HTTP/1.1" 200 917
+WARNING 2025-11-25 20:43:18,262 log Not Found: /favicon.ico
+WARNING 2025-11-25 20:43:18,263 basehttp "GET /favicon.ico HTTP/1.1" 404 2886
+WARNING 2025-11-25 20:44:36,493 log Not Found: /quizzes/
+WARNING 2025-11-25 20:44:36,495 basehttp "GET /quizzes/ HTTP/1.1" 404 2877
+WARNING 2025-11-25 20:44:36,541 log Not Found: /favicon.ico
+INFO 2025-11-25 20:44:36,542 basehttp - Broken pipe from ('127.0.0.1', 53962)
+INFO 2025-11-25 20:55:16,488 basehttp "GET /api/quizzes/ HTTP/1.1" 200 6204
+INFO 2025-11-25 20:55:16,672 basehttp "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3426
+INFO 2025-11-25 20:55:16,676 basehttp "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2025-11-25 20:55:16,688 basehttp "GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+INFO 2025-11-25 20:55:16,698 basehttp "GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+INFO 2025-11-25 20:55:16,718 basehttp "GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1793
+INFO 2025-11-25 20:55:16,720 basehttp "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3796
+INFO 2025-11-25 20:55:16,724 basehttp "GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+INFO 2025-11-25 20:55:16,730 basehttp "GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+INFO 2025-11-25 20:55:16,738 basehttp "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 200 59
+INFO 2025-11-25 20:55:16,743 basehttp "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+INFO 2025-11-25 20:55:16,751 basehttp "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2025-11-25 20:55:16,768 basehttp "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-11-25 20:55:31,384 basehttp "GET /api/quizzes/ HTTP/1.1" 200 6204
+INFO 2025-11-25 21:01:27,707 autoreload C:\PROYECTOS\QuizAngostura\authentication\urls.py changed, reloading.
+INFO 2025-11-25 21:01:28,687 autoreload Watching for file changes with StatReloader
+INFO 2025-11-25 21:01:31,543 autoreload C:\PROYECTOS\QuizAngostura\authentication\urls.py changed, reloading.
+INFO 2025-11-25 21:01:32,488 autoreload Watching for file changes with StatReloader
+INFO 2025-11-25 21:02:05,763 autoreload C:\PROYECTOS\QuizAngostura\authentication\urls.py changed, reloading.
+INFO 2025-11-25 21:02:06,691 autoreload Watching for file changes with StatReloader
+INFO 2025-11-25 21:02:44,038 autoreload C:\PROYECTOS\QuizAngostura\authentication\urls.py changed, reloading.
+INFO 2025-11-25 21:02:44,927 autoreload Watching for file changes with StatReloader
+INFO 2025-11-27 19:03:24,738 autoreload Watching for file changes with StatReloader
+INFO 2025-11-27 19:03:34,698 basehttp "GET / HTTP/1.1" 200 917
+WARNING 2025-11-27 19:03:35,371 log Not Found: /favicon.ico
+WARNING 2025-11-27 19:03:35,373 basehttp "GET /favicon.ico HTTP/1.1" 404 2990

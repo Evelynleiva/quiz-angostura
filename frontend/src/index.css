@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-angostura-gris;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-angostura-amarillo hover:bg-yellow-600 text-angostura-gris font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-angostura-turquesa hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg p-6;
+  }
+
+  .gradient-sky {
+    @apply bg-gradient-to-b from-angostura-cielo to-angostura-turquesa;
+  }
+
+  .gradient-nature {
+    @apply bg-gradient-to-b from-angostura-verde to-angostura-turquesa;
+  }
+}
