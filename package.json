@@ -1,7 +1,10 @@
 {
-  "dependencies": {
-    "@vitejs/plugin-react": "^5.1.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+  "name": "quiz-angostura-root",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
   }
 }

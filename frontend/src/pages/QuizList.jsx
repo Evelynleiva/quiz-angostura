@@ -28,7 +28,6 @@ const QuizList = () => {
   };
 
   const iniciarQuiz = (quizId) => {
-    // Redirigir a la página de registro antes del quiz
     navigate(`/quiz/${quizId}/registro`);
   };
 
@@ -57,41 +56,42 @@ const QuizList = () => {
         </div>
       </div>
     );
-  }
+  };
 
   return (
     <div className="min-h-screen gradient-sky flex flex-col items-center justify-center p-4 py-8">
       <div className="card max-w-3xl w-full space-y-6">
         <button
           onClick={() => navigate('/')}
-          className="text-angostura-turquesa hover:text-angostura-verde"
+          className="text-angostura-turquesa hover:text-angostura-verde transition-colors"
         >
-          ← Volver al inicio
+          â† Volver al inicio
         </button>
 
         <div className="text-center space-y-4">
           <h1 className="text-3xl md:text-4xl font-bold text-angostura-turquesa">
-            📚 Quizzes Disponibles
+            Quizzes Disponibles
           </h1>
           
           <Quibar 
             size="md" 
             animation="pulse"
-            message="¡Elige un quiz y pon a prueba tus conocimientos! 🧠"
+            message="Â¡Elige un quiz y pon a prueba tus conocimientos! ðŸ§ "
           />
         </div>
 
         {quizzes.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-600">No hay quizzes disponibles en este momento.</p>
-            <p className="text-sm text-gray-500 mt-2">Vuelve pronto para nuevos desafíos.</p>
+            <p className="text-sm text-gray-500 mt-2">Vuelve pronto para nuevos desafÃ­os.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {quizzes.map((quiz) => (
               <div
                 key={quiz.id}
-                className="bg-white border-2 border-angostura-cielo rounded-xl p-6 hover:shadow-xl transition-all hover:scale-105"
+                className="bg-white border-2 border-angostura-cielo rounded-xl p-6 hover:shadow-xl transition-all hover:scale-105 cursor-pointer"
+                onClick={() => iniciarQuiz(quiz.id)}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
@@ -102,23 +102,32 @@ const QuizList = () => {
                     
                     <div className="flex flex-wrap gap-3 text-sm">
                       <div className="flex items-center gap-2 bg-angostura-cielo/20 px-3 py-1 rounded-lg">
-                        <span>⏱️</span>
-                        <span className="font-semibold">{quiz.tiempo_limite} segundos</span>
+                        <span>â±ï¸</span>
+                        <span className="font-semibold">{quiz.duracion_minutos} minutos</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-angostura-verde/20 px-3 py-1 rounded-lg">
-                        <span>🌍</span>
-                        <span className="font-semibold">
-                          {quiz.idioma === 'es' ? 'Español' : quiz.idioma}
-                        </span>
-                      </div>
+                      {quiz.categoria && (
+                        <div className="flex items-center gap-2 bg-angostura-verde/20 px-3 py-1 rounded-lg">
+                          <span>ðŸ“‚</span>
+                          <span className="font-semibold">{quiz.categoria}</span>
+                        </div>
+                      )}
+                      {quiz.nivel_dificultad && (
+                        <div className="flex items-center gap-2 bg-angostura-amarillo/20 px-3 py-1 rounded-lg">
+                          <span>â­</span>
+                          <span className="font-semibold capitalize">{quiz.nivel_dificultad}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   <button
-                    onClick={() => iniciarQuiz(quiz.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      iniciarQuiz(quiz.id);
+                    }}
                     className="btn-primary whitespace-nowrap"
                   >
-                    🚀 Comenzar
+                    ðŸš€ Comenzar
                   </button>
                 </div>
               </div>
@@ -128,7 +137,7 @@ const QuizList = () => {
 
         <div className="bg-angostura-amarillo/20 rounded-lg p-4">
           <p className="text-sm text-gray-600 text-center">
-            💡 Tip: Lee bien cada pregunta y responde con calma. ¡El tiempo es importante!
+            ðŸ’¡ Tip: Lee bien cada pregunta y responde con calma. Â¡El tiempo es importante!
           </p>
         </div>
       </div>

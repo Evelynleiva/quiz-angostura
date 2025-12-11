@@ -10,7 +10,6 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log('📧 Login attempt:', email);
-    console.log('🔑 Password received:', password ? 'Yes' : 'No');
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
@@ -18,7 +17,7 @@ router.post('/login', async (req, res) => {
 
     // Buscar administrador
     const [admins] = await pool.query(
-      'SELECT * FROM administradores WHERE email = ? AND is_active = 1',
+      'SELECT * FROM administradores WHERE email = ? AND activo = 1',
       [email]
     );
 
@@ -28,11 +27,10 @@ router.post('/login', async (req, res) => {
 
     const admin = admins[0];
 
-    console.log('🔍 Admin found:', admin.email);
-    console.log('🔐 Hash from DB:', admin.password_hash);
+    console.log('👤 Admin found:', admin.email);
 
     // Verificar contraseña
-    const passwordMatch = await bcrypt.compare(password, admin.password_hash);
+    const passwordMatch = await bcrypt.compare(password, admin.password);
 
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
@@ -40,9 +38,9 @@ router.post('/login', async (req, res) => {
 
     // Generar token JWT
     const token = jwt.sign(
-      { id: admin.id, email: admin.email },
+      { id: admin.id, email: admin.email, rol: admin.rol },
       process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+      { expiresIn: '8h' }
     );
 
     res.json({
@@ -50,7 +48,8 @@ router.post('/login', async (req, res) => {
       admin: {
         id: admin.id,
         nombre: admin.nombre,
-        email: admin.email
+        email: admin.email,
+        rol: admin.rol
       }
     });
 

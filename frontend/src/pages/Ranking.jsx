@@ -34,6 +34,12 @@ const Ranking = () => {
     return `${position}°`;
   };
 
+  const formatearTiempo = (segundos) => {
+    const minutos = Math.floor(segundos / 60);
+    const segs = segundos % 60;
+    return `${minutos}:${segs.toString().padStart(2, '0')}`;
+  };
+
   const formatearFecha = (fecha) => {
     if (!fecha) return 'N/A';
     const date = new Date(fecha);
@@ -76,7 +82,7 @@ const Ranking = () => {
       <div className="card max-w-3xl w-full space-y-6">
         <button
           onClick={() => navigate('/')}
-          className="text-angostura-turquesa hover:text-angostura-verde"
+          className="text-angostura-turquesa hover:text-angostura-verde transition-colors"
         >
           ← Volver al inicio
         </button>
@@ -106,30 +112,36 @@ const Ranking = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {ranking.map((usuario, index) => (
+            {ranking.map((item, index) => (
               <div
-                key={usuario.id}
+                key={item.id || index}
                 className={`flex items-center justify-between p-4 rounded-lg transition-all hover:scale-105 ${
-                  index < 3
+                  (item.posicion || index + 1) <= 3
                     ? 'bg-gradient-to-r from-angostura-amarillo/30 to-angostura-cielo/30 border-2 border-angostura-amarillo'
                     : 'bg-white border border-gray-200'
                 }`}
               >
                 <div className="flex items-center gap-4">
                   <div className="text-2xl font-bold w-12 text-center">
-                    {getMedalEmoji(index + 1)}
+                    {getMedalEmoji(item.posicion || index + 1)}
                   </div>
                   <div className="text-left">
-                    <p className="font-bold text-angostura-gris">{usuario.nickname}</p>
-                    <p className="text-xs text-gray-500">{formatearFecha(usuario.fecha)}</p>
-                    <p className="text-xs text-angostura-verde font-semibold">{usuario.quiz_titulo}</p>
+                    <p className="font-bold text-angostura-gris">{item.nombre}</p>
+                    {item.ciudad && (
+                      <p className="text-xs text-gray-500">📍 {item.ciudad}</p>
+                    )}
+                    <p className="text-xs text-gray-500">{formatearFecha(item.fecha_registro)}</p>
+                    <p className="text-xs text-angostura-verde font-semibold">{item.quiz_titulo}</p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-angostura-turquesa">
-                    {usuario.puntaje_obtenido}
+                    {item.puntaje}
                   </p>
                   <p className="text-xs text-gray-500">puntos</p>
+                  <p className="text-xs text-gray-400">
+                    ⏱️ {formatearTiempo(item.tiempo_segundos)}
+                  </p>
                 </div>
               </div>
             ))}
@@ -138,7 +150,7 @@ const Ranking = () => {
 
         <div className="pt-4 border-t border-gray-200">
           <button
-            onClick={() => navigate('/quiz/escanear')}
+            onClick={() => navigate('/quiz/lista')}
             className="btn-primary w-full"
           >
             🎯 ¡Intenta superar el ranking!
@@ -147,7 +159,7 @@ const Ranking = () => {
 
         <div className="bg-angostura-cielo/30 rounded-lg p-4">
           <p className="text-xs text-gray-600 text-center">
-            💡 Los puntos se otorgan por respuestas correctas y tiempo de respuesta
+            💡 Los puntos se otorgan por respuestas correctas. ¡El tiempo desempata!
           </p>
         </div>
       </div>

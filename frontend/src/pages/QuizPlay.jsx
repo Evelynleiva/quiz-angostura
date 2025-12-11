@@ -13,9 +13,41 @@ const QuizPlay = () => {
   const [preguntaActual, setPreguntaActual] = useState(0);
   const [respuestas, setRespuestas] = useState({});
   const [tiempoRestante, setTiempoRestante] = useState(0);
+  const [tiempoTotal, setTiempoTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quizFinalizado, setQuizFinalizado] = useState(false);
+
+  // Sonidos con Web Audio API
+  const reproducirSonido = (tipo) => {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      if (tipo === 'correcto') {
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+      } else if (tipo === 'click') {
+        oscillator.frequency.value = 600;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+      }
+    } catch (e) {
+      // Fallback silencioso si el navegador bloquea AudioContext
+      console.warn('No se pudo reproducir sonido', e);
+    }
+  };
 
   useEffect(() => {
     inicializarQuiz();
@@ -24,13 +56,13 @@ const QuizPlay = () => {
   useEffect(() => {
     if (tiempoRestante > 0 && !quizFinalizado) {
       const timer = setTimeout(() => {
-        setTiempoRestante(tiempoRestante - 1);
+        setTiempoRestante((prev) => prev - 1);
       }, 1000);
       return () => clearTimeout(timer);
     } else if (tiempoRestante === 0 && quiz && !quizFinalizado) {
       finalizarQuiz();
     }
-  }, [tiempoRestante, quizFinalizado]);
+  }, [tiempoRestante, quizFinalizado, quiz]);
 
   const inicializarQuiz = async () => {
     try {
@@ -48,7 +80,11 @@ const QuizPlay = () => {
       // Cargar quiz
       const quizData = await quizzesAPI.obtenerPorId(quizId);
       setQuiz(quizData);
-      setTiempoRestante(quizData.tiempo_limite);
+      
+      // Convertir minutos a segundos (duracion_minutos * 60)
+      const tiempoEnSegundos = (quizData.duracion_minutos || 5) * 60;
+      setTiempoRestante(tiempoEnSegundos);
+      setTiempoTotal(tiempoEnSegundos);
 
       // Iniciar sesión
       const sesion = await sesionesAPI.iniciar(usuarioData.id, quizId);
@@ -64,6 +100,7 @@ const QuizPlay = () => {
   };
 
   const seleccionarRespuesta = (preguntaId, respuestaId) => {
+    reproducirSonido('click');
     setRespuestas({
       ...respuestas,
       [preguntaId]: respuestaId
@@ -71,6 +108,7 @@ const QuizPlay = () => {
   };
 
   const siguientePregunta = () => {
+    reproducirSonido('correcto');
     if (preguntaActual < quiz.preguntas.length - 1) {
       setPreguntaActual(preguntaActual + 1);
     } else {
@@ -94,7 +132,7 @@ const QuizPlay = () => {
       const resultado = await quizzesAPI.verificarRespuestas(quizId, respuestasArray);
 
       // Calcular tiempo completado
-      const tiempoCompletado = quiz.tiempo_limite - tiempoRestante;
+      const tiempoCompletado = tiempoTotal - tiempoRestante;
 
       // Finalizar sesión
       await sesionesAPI.finalizar(sesionId, resultado.puntajeObtenido, tiempoCompletado);

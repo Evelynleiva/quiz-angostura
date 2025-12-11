@@ -1,9 +1,23 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'http://localhost:5000/api',
   headers: { 'Content-Type': 'application/json' }
 });
+
+// Interceptor para agregar token automáticamente si existe
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // ============ USUARIOS ============
 export const usuariosAPI = {
@@ -51,6 +65,18 @@ export const quizzesAPI = {
     const response = await api.post(`/quizzes/${quizId}/verificar`, { respuestas });
     return response.data;
   },
+  crear: async (quizData) => {
+    const response = await api.post('/quizzes', quizData);
+    return response.data;
+  },
+  actualizar: async (id, quizData) => {
+    const response = await api.put(`/quizzes/${id}`, quizData);
+    return response.data;
+  },
+  eliminar: async (id) => {
+    const response = await api.delete(`/quizzes/${id}`);
+    return response.data;
+  },
 };
 
 // ============ SESIONES ============
@@ -79,5 +105,66 @@ export const sesionesAPI = {
     return response.data;
   },
 };
+
+// ============ CÓDIGOS QR ============
+export const qrAPI = {
+  obtenerTodos: async () => {
+    const response = await api.get('/qr');
+    return response.data;
+  },
+  generar: async (quizId, descripcion, ubicacion) => {
+    const response = await api.post('/qr/generar', {
+      quizId: parseInt(quizId),
+      descripcion,
+      ubicacion
+    });
+    return response.data;
+  },
+  escanear: async (codigo) => {
+    const response = await api.post(`/qr/escanear/${codigo}`);
+    return response.data;
+  },
+  activar: async (id) => {
+    const response = await api.patch(`/qr/${id}/activar`);
+    return response.data;
+  },
+  desactivar: async (id) => {
+    const response = await api.patch(`/qr/${id}/desactivar`);
+    return response.data;
+  },
+  eliminar: async (id) => {
+    const response = await api.delete(`/qr/${id}`);
+    return response.data;
+  },
+};
+
+// ============ AUTENTICACIÓN ============
+export const authAPI = {
+  login: async (email, password) => {
+    const response = await api.post('/auth/login', { email, password });
+    return response.data;
+  },
+  verificarToken: async () => {
+    const response = await api.get('/auth/verificar');
+    return response.data;
+  },
+  logout: () => {
+    localStorage.removeItem('adminToken');
+  },
+};
+
+// ============ ADMINISTRADORES ============
+export const adminAPI = {
+  obtenerEstadisticas: async () => {
+    const response = await api.get('/admin/estadisticas');
+    return response.data;
+  },
+};
+
+// Exportar funciones individuales para retrocompatibilidad
+export const generarCodigoQR = qrAPI.generar;
+export const obtenerCodigosQR = qrAPI.obtenerTodos;
+export const desactivarCodigoQR = qrAPI.desactivar;
+export const eliminarCodigoQR = qrAPI.eliminar;
 
 export default api;

@@ -9,6 +9,7 @@ import rankingRoutes from './routes/ranking.routes.js';
 import quizzesRoutes from './routes/quizzes.routes.js';
 import sesionesRoutes from './routes/sesiones.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import qrRoutes from './routes/qr.routes.js';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -56,6 +57,7 @@ app.use('/api/ranking', rankingRoutes);
 app.use('/api/quizzes', quizzesRoutes);
 app.use('/api/sesiones', sesionesRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/qr', qrRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {

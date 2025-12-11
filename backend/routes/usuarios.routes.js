@@ -13,9 +13,14 @@ router.post('/registro', async (req, res) => {
       return res.status(400).json({ error: 'El nickname es requerido' });
     }
 
+    // Validar longitud
+    if (nickname.length < 3 || nickname.length > 20) {
+      return res.status(400).json({ error: 'El nickname debe tener entre 3 y 20 caracteres' });
+    }
+
     // Verificar si el nickname ya existe
     const [existingUser] = await pool.query(
-      'SELECT id FROM usuarios WHERE nickname = ?',
+      'SELECT id FROM usuarios WHERE nombre = ?',
       [nickname]
     );
 
@@ -23,9 +28,9 @@ router.post('/registro', async (req, res) => {
       return res.status(400).json({ error: 'Este nickname ya está en uso' });
     }
 
-    // Insertar nuevo usuario
+    // Insertar nuevo usuario (solo nombre como nickname)
     const [result] = await pool.query(
-      'INSERT INTO usuarios (nickname, fecha_registro, total_quizzes_completados) VALUES (?, NOW(), 0)',
+      'INSERT INTO usuarios (nombre, fecha_registro, activo) VALUES (?, NOW(), 1)',
       [nickname]
     );
 
@@ -49,7 +54,7 @@ router.get('/buscar/:nickname', async (req, res) => {
     const { nickname } = req.params;
 
     const [usuarios] = await pool.query(
-      'SELECT id, nickname, fecha_registro, total_quizzes_completados FROM usuarios WHERE nickname = ?',
+      'SELECT id, nombre as nickname, fecha_registro FROM usuarios WHERE nombre = ? AND activo = 1',
       [nickname]
     );
 
@@ -69,7 +74,7 @@ router.get('/buscar/:nickname', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const [usuarios] = await pool.query(
-      'SELECT id, nickname, fecha_registro, total_quizzes_completados FROM usuarios ORDER BY fecha_registro DESC'
+      'SELECT id, nombre as nickname, fecha_registro FROM usuarios WHERE activo = 1 ORDER BY fecha_registro DESC'
     );
 
     res.json(usuarios);

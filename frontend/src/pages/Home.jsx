@@ -7,58 +7,77 @@ const Home = () => {
 
   return (
     <div className="min-h-screen gradient-sky flex flex-col items-center justify-center p-4">
-      <div className="card max-w-2xl w-full text-center space-y-6">
-        <div className="space-y-2">
+      <div className="card max-w-2xl w-full space-y-8">
+        {/* Logo y título */}
+        <div className="text-center space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold text-angostura-turquesa">
-            Museo Angostura
+            Museo Angostura del Biobío
           </h1>
-          <p className="text-xl text-angostura-verde font-semibold">
-            del Biobío
+          <p className="text-xl text-gray-600">
+            Sistema Interactivo de Quizzes
           </p>
         </div>
 
+        {/* Quibar */}
         <Quibar 
           size="xl" 
-          animation="wave"
-          message="¡Bienvenido! Escanea un código QR para comenzar tu aventura educativa 🌲"
+          animation="float" 
+          message="¡Bienvenido! Soy Quibar, tu guía en el museo 🌲"
         />
 
-        <div className="space-y-4">
-          <p className="text-lg text-gray-700">
-            ¡Es tiempo de explorar! Ven a disfrutar la naturaleza y aprende sobre
-            la historia, biodiversidad y cultura del río Biobío.
-          </p>
+        {/* Opciones principales */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Para visitantes */}
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 space-y-4 border-2 border-angostura-turquesa hover:shadow-xl transition-shadow">
+            <div className="text-center">
+              <span className="text-5xl mb-3 block">🎮</span>
+              <h2 className="text-2xl font-bold text-angostura-turquesa mb-2">
+                Visitantes
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Escanea el código QR o explora los quizzes disponibles
+              </p>
+            </div>
+            <div className="space-y-2">
+              <button
+                onClick={() => navigate('/quiz/lista')}
+                className="btn-primary w-full"
+              >
+                📚 Ver Quizzes Disponibles
+              </button>
+              <button
+                onClick={() => navigate('/ranking')}
+                className="btn-secondary w-full"
+              >
+                🏆 Ver Ranking
+              </button>
+            </div>
+          </div>
 
-          <div className="bg-angostura-cielo/30 rounded-lg p-4">
-            <p className="text-sm text-gray-600">
-              📱 Escanea un código QR en el museo para acceder a un quiz interactivo
-              <br />
-              🏆 Compite con otros visitantes por el mejor puntaje
-              <br />
-              🦊 Quibar te acompañará en tu aventura
-            </p>
+          {/* Para administradores */}
+          <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl p-6 space-y-4 border-2 border-angostura-amarillo hover:shadow-xl transition-shadow">
+            <div className="text-center">
+              <span className="text-5xl mb-3 block">👨‍💼</span>
+              <h2 className="text-2xl font-bold text-angostura-amarillo mb-2">
+                Administración
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Gestiona quizzes, códigos QR y resultados
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/admin/login')}
+              className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold rounded-lg transition-all transform hover:scale-105"
+            >
+              🔐 Acceso Administradores
+            </button>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <button
-            onClick={() => navigate('/quiz/escanear')}
-            className="btn-primary"
-          >
-            🎯 Escanear Código QR
-          </button>
-
-          <button
-            onClick={() => navigate('/ranking')}
-            className="btn-secondary"
-          >
-            🏆 Ver Ranking
-          </button>
-        </div>
-
-        <div className="pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-500">
-            Síguenos en redes sociales: Instagram • Facebook • Twitter • YouTube
+        {/* Información adicional */}
+        <div className="bg-angostura-cielo/30 rounded-lg p-4 text-center">
+          <p className="text-sm text-gray-600">
+            💡 <strong>Tip:</strong> Si tienes un código QR, escanéalo con tu celular para acceder directamente al quiz
           </p>
         </div>
       </div>

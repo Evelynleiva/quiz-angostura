@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { authAPI } from '../../services/api';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -15,20 +15,20 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/auth/login', {
-        email,
-        password
-      });
+      const data = await authAPI.login(email, password);
 
-      // Guardar token
-      localStorage.setItem('adminToken', response.data.token);
-      localStorage.setItem('adminData', JSON.stringify(response.data.admin));
+      // Guardar token y datos del admin que devuelve la API
+      localStorage.setItem('adminToken', data.token);
+      localStorage.setItem('adminData', JSON.stringify(data.admin));
 
       // Redirigir al dashboard
       navigate('/admin/dashboard');
-
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al iniciar sesión');
+      setError(
+        err.response?.data?.error ||
+        err.message ||
+        'Error al iniciar sesión'
+      );
     } finally {
       setLoading(false);
     }

@@ -14,12 +14,12 @@ const QuizRegistro = () => {
     e.preventDefault();
     
     if (!nickname.trim()) {
-      setError('Por favor ingresa un nickname');
+      setError('Por favor ingresa tu nombre');
       return;
     }
 
     if (nickname.length < 3) {
-      setError('El nickname debe tener al menos 3 caracteres');
+      setError('Tu nombre debe tener al menos 3 caracteres');
       return;
     }
 
@@ -45,7 +45,7 @@ const QuizRegistro = () => {
 
     } catch (err) {
       console.error('Error al registrar usuario:', err);
-      setError('Error al procesar tu registro. Intenta de nuevo.');
+      setError(err.response?.data?.error || 'Error al procesar tu registro. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +56,7 @@ const QuizRegistro = () => {
       <div className="card max-w-md w-full space-y-6">
         <button
           onClick={() => navigate('/quiz/lista')}
-          className="text-angostura-turquesa hover:text-angostura-verde"
+          className="text-angostura-turquesa hover:text-angostura-verde transition-colors"
         >
           ← Volver a quizzes
         </button>
@@ -69,27 +69,28 @@ const QuizRegistro = () => {
           <Quibar 
             size="lg" 
             animation="bounce"
-            message="Cuéntame, ¿cómo te llamas? 🦊"
+            message="¿Cómo quieres que te llamen? 🦊"
           />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="nickname" className="block text-sm font-semibold text-angostura-gris mb-2">
-              Tu Nickname
+              Tu Nombre
             </label>
             <input
               type="text"
               id="nickname"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              placeholder="Ej: Explorador123"
+              placeholder="Ej: Matías, Sofía, El Explorador..."
               maxLength={20}
               className="w-full px-4 py-3 border-2 border-angostura-cielo rounded-lg focus:outline-none focus:border-angostura-turquesa text-lg"
               disabled={loading}
+              autoFocus
             />
             <p className="text-xs text-gray-500 mt-1">
-              Máximo 20 caracteres. Este nombre aparecerá en el ranking.
+              Entre 3 y 20 caracteres. Aparecerá en el ranking 🏆
             </p>
           </div>
 
@@ -101,16 +102,16 @@ const QuizRegistro = () => {
 
           <button
             type="submit"
-            disabled={loading || !nickname.trim()}
-            className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading || !nickname.trim() || nickname.length < 3}
+            className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed text-lg py-3"
           >
-            {loading ? 'Procesando...' : '🎯 Continuar al Quiz'}
+            {loading ? '⏳ Cargando...' : '🎯 ¡Empezar a Jugar!'}
           </button>
         </form>
 
         <div className="bg-angostura-cielo/30 rounded-lg p-4">
-          <p className="text-xs text-gray-600 text-center">
-            💡 Si ya jugaste antes, usa el mismo nickname para ver tu progreso
+          <p className="text-sm text-gray-600 text-center">
+            💡 <strong>Consejo:</strong> Si ya jugaste antes, usa el mismo nombre para ver tu progreso
           </p>
         </div>
       </div>

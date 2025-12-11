@@ -9,17 +9,19 @@ router.get('/', async (req, res) => {
     const limit = req.query.limit || 10; // Por defecto top 10
 
     const [ranking] = await pool.query(
-      `SELECT 
-        u.id,
-        u.nickname,
-        sq.puntaje_obtenido,
-        sq.fecha_hora_fin as fecha,
-        q.titulo as quiz_titulo
-      FROM sesiones_quiz sq
-      INNER JOIN usuarios u ON sq.usuario_id = u.id
-      INNER JOIN quizzes q ON sq.quiz_id = q.id
-      WHERE sq.completado = 1
-      ORDER BY sq.puntaje_obtenido DESC, sq.tiempo_completado ASC
+      `SELECT
+        r.posicion,
+        u.nombre,
+        u.email,
+        u.ciudad,
+        r.puntaje,
+        r.tiempo_segundos,
+        q.titulo as quiz_titulo,
+        r.fecha_registro
+      FROM ranking r
+      INNER JOIN usuarios u ON r.usuario_id = u.id
+      INNER JOIN quizzes q ON r.quiz_id = q.id
+      ORDER BY r.puntaje DESC, r.tiempo_segundos ASC
       LIMIT ?`,
       [parseInt(limit)]
     );
@@ -39,16 +41,17 @@ router.get('/quiz/:quizId', async (req, res) => {
     const limit = req.query.limit || 10;
 
     const [ranking] = await pool.query(
-      `SELECT 
-        u.id,
-        u.nickname,
-        sq.puntaje_obtenido,
-        sq.fecha_hora_fin as fecha,
-        sq.tiempo_completado
-      FROM sesiones_quiz sq
-      INNER JOIN usuarios u ON sq.usuario_id = u.id
-      WHERE sq.quiz_id = ? AND sq.completado = 1
-      ORDER BY sq.puntaje_obtenido DESC, sq.tiempo_completado ASC
+      `SELECT
+        r.posicion,
+        u.nombre,
+        u.email,
+        r.puntaje,
+        r.tiempo_segundos,
+        r.fecha_registro
+      FROM ranking r
+      INNER JOIN usuarios u ON r.usuario_id = u.id
+      WHERE r.quiz_id = ?
+      ORDER BY r.posicion ASC
       LIMIT ?`,
       [quizId, parseInt(limit)]
     );
@@ -67,27 +70,22 @@ router.get('/usuario/:usuarioId', async (req, res) => {
     const { usuarioId } = req.params;
 
     const [resultado] = await pool.query(
-      `SELECT 
-        sq.id,
-        sq.puntaje_obtenido,
-        sq.fecha_hora_fin,
-        q.titulo as quiz_titulo,
-        (
-          SELECT COUNT(*) + 1
-          FROM sesiones_quiz sq2
-          WHERE sq2.completado = 1 
-          AND sq2.puntaje_obtenido > sq.puntaje_obtenido
-        ) as posicion
-      FROM sesiones_quiz sq
-      INNER JOIN quizzes q ON sq.quiz_id = q.id
-      WHERE sq.usuario_id = ? AND sq.completado = 1
-      ORDER BY sq.puntaje_obtenido DESC
+      `SELECT
+        r.posicion,
+        r.puntaje,
+        r.tiempo_segundos,
+        r.fecha_registro,
+        q.titulo as quiz_titulo
+      FROM ranking r
+      INNER JOIN quizzes q ON r.quiz_id = q.id
+      WHERE r.usuario_id = ?
+      ORDER BY r.puntaje DESC, r.tiempo_segundos ASC
       LIMIT 1`,
       [usuarioId]
     );
 
     if (resultado.length === 0) {
-      return res.status(404).json({ error: 'El usuario no tiene sesiones completadas' });
+      return res.status(404).json({ error: 'El usuario no tiene ranking' });
     }
 
     res.json(resultado[0]);
