@@ -56,7 +56,7 @@ const QuizList = () => {
         </div>
       </div>
     );
-  };
+  }
 
   return (
     <div className="min-h-screen gradient-sky flex flex-col items-center justify-center p-4 py-8">
@@ -65,7 +65,7 @@ const QuizList = () => {
           onClick={() => navigate('/')}
           className="text-angostura-turquesa hover:text-angostura-verde transition-colors"
         >
-          â† Volver al inicio
+          ← Volver al inicio
         </button>
 
         <div className="text-center space-y-4">
@@ -76,14 +76,14 @@ const QuizList = () => {
           <Quibar 
             size="md" 
             animation="pulse"
-            message="Â¡Elige un quiz y pon a prueba tus conocimientos! ðŸ§ "
+            message="¡Elige un quiz y pon a prueba tus conocimientos! 🧠"
           />
         </div>
 
         {quizzes.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-600">No hay quizzes disponibles en este momento.</p>
-            <p className="text-sm text-gray-500 mt-2">Vuelve pronto para nuevos desafÃ­os.</p>
+            <p className="text-sm text-gray-500 mt-2">Vuelve pronto para nuevos desafíos.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -102,18 +102,18 @@ const QuizList = () => {
                     
                     <div className="flex flex-wrap gap-3 text-sm">
                       <div className="flex items-center gap-2 bg-angostura-cielo/20 px-3 py-1 rounded-lg">
-                        <span>â±ï¸</span>
+                        <span>⏱️</span>
                         <span className="font-semibold">{quiz.duracion_minutos} minutos</span>
                       </div>
                       {quiz.categoria && (
                         <div className="flex items-center gap-2 bg-angostura-verde/20 px-3 py-1 rounded-lg">
-                          <span>ðŸ“‚</span>
+                          <span>🌿</span>
                           <span className="font-semibold">{quiz.categoria}</span>
                         </div>
                       )}
                       {quiz.nivel_dificultad && (
                         <div className="flex items-center gap-2 bg-angostura-amarillo/20 px-3 py-1 rounded-lg">
-                          <span>â­</span>
+                          <span>⭐</span>
                           <span className="font-semibold capitalize">{quiz.nivel_dificultad}</span>
                         </div>
                       )}
@@ -127,7 +127,7 @@ const QuizList = () => {
                     }}
                     className="btn-primary whitespace-nowrap"
                   >
-                    ðŸš€ Comenzar
+                    Comenzar
                   </button>
                 </div>
               </div>
@@ -137,7 +137,7 @@ const QuizList = () => {
 
         <div className="bg-angostura-amarillo/20 rounded-lg p-4">
           <p className="text-sm text-gray-600 text-center">
-            ðŸ’¡ Tip: Lee bien cada pregunta y responde con calma. Â¡El tiempo es importante!
+            💡 Tip: Lee bien cada pregunta y responde con calma. ¡El tiempo es importante!
           </p>
         </div>
       </div>

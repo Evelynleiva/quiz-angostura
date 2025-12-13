@@ -94,13 +94,3 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
-
-@layer components {
-  .page-layout {
-    @apply min-h-screen gradient-sky flex flex-col items-center justify-center p-4;
-  }
-
-  .page-card {
-    @apply card max-w-2xl w-full space-y-8;
-  }
-}
