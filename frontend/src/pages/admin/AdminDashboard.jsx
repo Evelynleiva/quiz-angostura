@@ -10,6 +10,7 @@ const AdminDashboard = () => {
     totalUsuarios: 0,
     totalSesiones: 0
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Verificar autenticación
@@ -27,22 +28,44 @@ const AdminDashboard = () => {
 
   const cargarEstadisticas = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem('adminToken');
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       
+      // Configuración de headers
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
       // Cargar estadísticas básicas
-      const [quizzes, usuarios, sesiones] = await Promise.all([
-        axios.get('/api/quizzes', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('/api/usuarios', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('/api/ranking', { headers: { Authorization: `Bearer ${token}` } })
+      const [quizzesRes, usuariosRes, sesionesRes] = await Promise.all([
+        axios.get(`${API_URL}/quizzes`, config),
+        axios.get(`${API_URL}/usuarios`, config),
+        axios.get(`${API_URL}/sesiones`, config)
       ]);
 
+      console.log('Datos cargados:', {
+        quizzes: quizzesRes.data,
+        usuarios: usuariosRes.data,
+        sesiones: sesionesRes.data
+      });
+
       setStats({
-        totalQuizzes: quizzes.data.length,
-        totalUsuarios: usuarios.data.length,
-        totalSesiones: sesiones.data.length
+        totalQuizzes: Array.isArray(quizzesRes.data) ? quizzesRes.data.length : 0,
+        totalUsuarios: Array.isArray(usuariosRes.data) ? usuariosRes.data.length : 0,
+        totalSesiones: Array.isArray(sesionesRes.data) ? sesionesRes.data.length : 0
       });
     } catch (error) {
       console.error('Error al cargar estadísticas:', error);
+      
+      // Si el error es de autenticación, redirigir al login
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminData');
+        navigate('/admin/login');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,7 +115,11 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Quizzes</p>
-                <p className="text-3xl font-bold text-angostura-turquesa">{stats.totalQuizzes}</p>
+                {loading ? (
+                  <p className="text-3xl font-bold text-gray-400">...</p>
+                ) : (
+                  <p className="text-3xl font-bold text-angostura-turquesa">{stats.totalQuizzes}</p>
+                )}
               </div>
               <div className="text-4xl">📚</div>
             </div>
@@ -102,7 +129,11 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Usuarios</p>
-                <p className="text-3xl font-bold text-angostura-turquesa">{stats.totalUsuarios}</p>
+                {loading ? (
+                  <p className="text-3xl font-bold text-gray-400">...</p>
+                ) : (
+                  <p className="text-3xl font-bold text-angostura-turquesa">{stats.totalUsuarios}</p>
+                )}
               </div>
               <div className="text-4xl">👥</div>
             </div>
@@ -112,7 +143,11 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Sesiones Completadas</p>
-                <p className="text-3xl font-bold text-angostura-turquesa">{stats.totalSesiones}</p>
+                {loading ? (
+                  <p className="text-3xl font-bold text-gray-400">...</p>
+                ) : (
+                  <p className="text-3xl font-bold text-angostura-turquesa">{stats.totalSesiones}</p>
+                )}
               </div>
               <div className="text-4xl">✅</div>
             </div>

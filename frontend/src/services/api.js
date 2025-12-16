@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -102,6 +102,10 @@ export const sesionesAPI = {
   },
   obtenerPorId: async (sesionId) => {
     const response = await api.get(`/sesiones/${sesionId}`);
+    return response.data;
+  },
+  obtenerTodos: async () => {
+    const response = await api.get('/sesiones');
     return response.data;
   },
 };

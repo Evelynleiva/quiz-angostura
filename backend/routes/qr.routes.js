@@ -40,79 +40,55 @@ router.post('/generar', async (req, res) => {
       return res.status(400).json({ error: 'Quiz ID es requerido' });
     }
 
-    console.log('5. Verificando si quiz existe...');
     // Verificar que el quiz existe
-    const [quizzes] = await pool.query(
-      'SELECT id, titulo FROM quizzes WHERE id = ?',
-      [quizId]
-    );
-
-    console.log('6. Quizzes encontrados:', quizzes);
-
-    if (quizzes.length === 0) {
-      console.error('7. ERROR: Quiz no encontrado');
+    const [quiz] = await pool.query('SELECT id FROM quizzes WHERE id = ?', [quizId]);
+    
+    if (quiz.length === 0) {
       return res.status(404).json({ error: 'Quiz no encontrado' });
     }
 
-    console.log('8. Generando código único...');
     // Generar código único
     const codigo = `QUIZ-${quizId}-${Date.now()}`;
     
-    console.log('9. Código generado:', codigo);
-    
-    // URL que se guardará en el QR
-    const url = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/quiz/${quizId}/registro`;
+    // URL de destino - CORREGIDA PARA HOTSPOT
+    const urlDestino = `http://10.215.93.231:5173/quiz/${quizId}/registro`;
 
-    console.log('10. URL del QR:', url);
-    console.log('11. Generando imagen QR...');
+    console.log('5. URL generada:', urlDestino);
 
-    // Generar imagen QR en base64 con manejo de errores
-    let qrImage;
-    try {
-      qrImage = await QRCode.toDataURL(url, {
-        width: 400,
-        margin: 2,
-        color: {
-          dark: '#0891B2',
-          light: '#FFFFFF'
-        },
-        errorCorrectionLevel: 'M'
-      });
-      console.log('12. Imagen QR generada exitosamente');
-    } catch (qrError) {
-      console.error('13. ERROR al generar imagen QR:', qrError);
-      return res.status(500).json({ 
-        error: 'Error al generar la imagen del código QR',
-        details: qrError.message 
-      });
-    }
+    // Generar imagen QR en base64
+    const qrImage = await QRCode.toDataURL(urlDestino, {
+      errorCorrectionLevel: 'H',
+      type: 'image/png',
+      quality: 1,
+      margin: 1,
+      color: {
+        dark: '#000000',
+        light: '#FFFFFF'
+      }
+    });
 
-    console.log('14. Guardando en base de datos...');
-    // Guardar en base de datos (solo las columnas que existen)
+    // Insertar en base de datos
     const [result] = await pool.query(
-      `INSERT INTO codigos_qr (quiz_id, codigo, url_qr)
-        VALUES (?, ?, ?)`,
-      [quizId, codigo, url]
+      `INSERT INTO codigos_qr 
+        (quiz_id, codigo, url_qr, descripcion, ubicacion, activo, veces_escaneado, fecha_creacion) 
+        VALUES (?, ?, ?, ?, ?, 1, 0, NOW())`,
+      [quizId, codigo, urlDestino, descripcion || null, ubicacion || null]
     );
 
-    console.log('15. QR guardado con ID:', result.insertId);
-    console.log('16. Enviando respuesta exitosa');
+    console.log('6. QR guardado en BD con ID:', result.insertId);
 
     res.status(201).json({
       id: result.insertId,
       codigo,
-      url,
+      url: urlDestino,
       qrImage,
-      message: 'Código QR generado exitosamente'
+      descripcion,
+      ubicacion
     });
 
   } catch (error) {
-    console.error('=== ERROR BACKEND ===');
-    console.error('Error completo:', error);
-    res.status(500).json({ 
-      error: 'Error al generar código QR',
-      details: error.message 
-    });
+    console.error('Error al generar código QR:', error);
+    res.status(500).json({ error: 'Error al generar código QR' });
   }
 });
 
@@ -122,21 +98,24 @@ router.post('/escanear/:codigo', async (req, res) => {
     const { codigo } = req.params;
 
     // Buscar código QR
-    const [codigos] = await pool.query(
-      'SELECT * FROM codigos_qr WHERE codigo = ?',
+    const [qr] = await pool.query(
+      'SELECT * FROM codigos_qr WHERE codigo = ? AND activo = 1',
       [codigo]
     );
 
-    if (codigos.length === 0) {
-      return res.status(404).json({ error: 'Código QR no encontrado' });
+    if (qr.length === 0) {
+      return res.status(404).json({ error: 'Código QR no encontrado o inactivo' });
     }
 
-    const codigoQR = codigos[0];
+    // Incrementar contador
+    await pool.query(
+      'UPDATE codigos_qr SET veces_escaneado = veces_escaneado + 1, ultimo_escaneo = NOW() WHERE id = ?',
+      [qr[0].id]
+    );
 
     res.json({
-      quizId: codigoQR.quiz_id,
-      url: codigoQR.url_qr,
-      message: 'QR escaneado exitosamente'
+      quizId: qr[0].quiz_id,
+      url: qr[0].url_qr
     });
 
   } catch (error) {
@@ -145,29 +124,39 @@ router.post('/escanear/:codigo', async (req, res) => {
   }
 });
 
-// Desactivar código QR (esta funcionalidad no funcionará hasta agregar la columna 'activo')
-router.patch('/:id/desactivar', async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    // Por ahora solo responde OK, ya que no existe la columna 'activo'
-    res.json({ message: 'Funcionalidad desactivar requiere columna activo en BD' });
-  } catch (error) {
-    console.error('Error al desactivar QR:', error);
-    res.status(500).json({ error: 'Error al desactivar código QR' });
-  }
-});
-
-// Activar código QR (esta funcionalidad no funcionará hasta agregar la columna 'activo')
+// Activar código QR
 router.patch('/:id/activar', async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Por ahora solo responde OK, ya que no existe la columna 'activo'
-    res.json({ message: 'Funcionalidad activar requiere columna activo en BD' });
+
+    await pool.query(
+      'UPDATE codigos_qr SET activo = 1 WHERE id = ?',
+      [id]
+    );
+
+    res.json({ message: 'Código QR activado' });
+
   } catch (error) {
-    console.error('Error al activar QR:', error);
+    console.error('Error al activar código QR:', error);
     res.status(500).json({ error: 'Error al activar código QR' });
+  }
+});
+
+// Desactivar código QR
+router.patch('/:id/desactivar', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      'UPDATE codigos_qr SET activo = 0 WHERE id = ?',
+      [id]
+    );
+
+    res.json({ message: 'Código QR desactivado' });
+
+  } catch (error) {
+    console.error('Error al desactivar código QR:', error);
+    res.status(500).json({ error: 'Error al desactivar código QR' });
   }
 });
 
@@ -179,8 +168,9 @@ router.delete('/:id', async (req, res) => {
     await pool.query('DELETE FROM codigos_qr WHERE id = ?', [id]);
 
     res.json({ message: 'Código QR eliminado' });
+
   } catch (error) {
-    console.error('Error al eliminar QR:', error);
+    console.error('Error al eliminar código QR:', error);
     res.status(500).json({ error: 'Error al eliminar código QR' });
   }
 });

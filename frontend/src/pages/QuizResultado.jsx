@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Quibar from '../components/common/Quibar';
 import ShareableCard from '../components/common/ShareableCard';
@@ -8,8 +8,8 @@ const QuizResultado = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { resultado, tiempoCompletado, usuario } = location.state || {};
-  const resultadoRef = useRef(null);
   const shareableRef = useRef(null);
+  const [generando, setGenerando] = useState(false);
 
   if (!resultado) {
     navigate('/');
@@ -41,298 +41,345 @@ const QuizResultado = () => {
     return `${minutos}:${segs.toString().padStart(2, '0')}`;
   };
 
-  const textoBase = `¡Obtuve ${porcentaje}% en el quiz "${
-    location.state?.quiz?.titulo || 'Flora del Biobío'
-  }" del Museo Angostura! 🏛️`;
-  const url = window.location.origin;
+  const textoBase = `¡Obtuve ${porcentaje}% en el quiz del Museo Angostura! 🏛️`;
 
   const quibarAnimation =
     porcentaje >= 80 ? 'celebra' : porcentaje >= 40 ? 'idle' : 'float';
 
-  // Compartir o descargar imagen
+  // VERSIÓN FINAL - LA MÁS EFECTIVA
   const capturarYDescargar = async () => {
+    if (generando) return;
+    
     try {
+      setGenerando(true);
+      
       const shareableElement = shareableRef.current;
-      if (!shareableElement) return;
+      if (!shareableElement) {
+        alert('❌ Error: No se encontró el elemento');
+        setGenerando(false);
+        return;
+      }
 
-      // Mostrar off-screen
+      // Hacer visible
       shareableElement.style.position = 'fixed';
-      shareableElement.style.left = '-9999px';
-      shareableElement.style.top = '0';
-      shareableElement.style.zIndex = '-1';
+      shareableElement.style.left = '50%';
+      shareableElement.style.top = '50%';
+      shareableElement.style.transform = 'translate(-50%, -50%) scale(0.3)';
+      shareableElement.style.zIndex = '9999';
+      shareableElement.style.width = '1080px';
+      shareableElement.style.height = '1080px';
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const canvas = await html2canvas(shareableElement, {
         backgroundColor: '#E0F2FE',
-        scale: 2,
+        scale: 1,
         logging: false,
-        useCORS: true,
+        useCORS: false,
         allowTaint: true,
         width: 1080,
-        height: 1920
+        height: 1080
       });
 
-      // Ocultar de nuevo
-      shareableElement.style.position = 'absolute';
+      // Ocultar
+      shareableElement.style.position = 'fixed';
       shareableElement.style.left = '-9999px';
+      shareableElement.style.top = '-9999px';
+      shareableElement.style.transform = 'none';
+      shareableElement.style.zIndex = '-1';
 
       canvas.toBlob(async (blob) => {
-        if (!blob) return;
+        if (!blob) {
+          alert('❌ Error al generar la imagen');
+          setGenerando(false);
+          return;
+        }
 
-        const file = new File(
-          [blob],
-          'museo-angostura-resultado.png',
-          { type: 'image/png' }
-        );
+        const file = new File([blob], 'museo-resultado.png', { type: 'image/png' });
 
-        // Primero intentamos compartir nativo (móviles compatibles)
-        const shareData = {
-          files: [file],
-          title: 'Mi resultado - Museo Angostura',
-          text: `${textoBase} ${url}`
-        };
-
-        if (
-          navigator.share &&
-          navigator.canShare &&
-          navigator.canShare({ files: [file] })
-        ) {
+        // MÉTODO 1: Compartir nativo (mejor en móviles modernos)
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
-            await navigator.share(shareData);
-            return; // el usuario ya compartió o canceló
+            await navigator.share({
+              files: [file],
+              title: 'Mi resultado - Museo Angostura',
+              text: textoBase
+            });
+            setGenerando(false);
+            return;
           } catch (err) {
             if (err.name === 'AbortError') {
-              return; // canceló; no forzamos descarga
+              setGenerando(false);
+              return;
             }
-            // si falla por otra razón, seguimos con descarga
           }
         }
 
-        // Respaldo: descargar la imagen
-        const link = document.createElement('a');
-        link.download = 'museo-angostura-resultado.png';
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
+        // MÉTODO 2: Abrir en nueva pestaña (universal, siempre funciona)
+        const dataUrl = canvas.toDataURL('image/png', 1.0);
+        const newWindow = window.open('', '_blank');
+        
+        if (newWindow) {
+          newWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Tu Resultado - Museo Angostura</title>
+              <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  min-height: 100vh;
+                  padding: 20px;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                }
+                .container {
+                  max-width: 600px;
+                  width: 100%;
+                  text-align: center;
+                }
+                img {
+                  max-width: 100%;
+                  height: auto;
+                  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                  border-radius: 12px;
+                  margin-bottom: 24px;
+                  cursor: pointer;
+                }
+                .card {
+                  background: rgba(255, 255, 255, 0.1);
+                  backdrop-filter: blur(10px);
+                  border-radius: 16px;
+                  padding: 24px;
+                  margin-top: 20px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+                h2 {
+                  color: #fbbf24;
+                  font-size: 24px;
+                  margin-bottom: 16px;
+                  font-weight: 800;
+                }
+                p {
+                  color: rgba(255, 255, 255, 0.9);
+                  font-size: 16px;
+                  line-height: 1.6;
+                  margin-bottom: 12px;
+                }
+                .emoji { font-size: 24px; }
+                .btn {
+                  display: inline-block;
+                  margin-top: 16px;
+                  padding: 14px 28px;
+                  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+                  color: white;
+                  text-decoration: none;
+                  border-radius: 12px;
+                  font-weight: bold;
+                  font-size: 18px;
+                  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+                  transition: transform 0.2s;
+                }
+                .btn:active { transform: scale(0.95); }
+                .divider {
+                  height: 1px;
+                  background: rgba(255, 255, 255, 0.2);
+                  margin: 20px 0;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <img 
+                  src="${dataUrl}" 
+                  alt="Tu resultado" 
+                  id="resultImg"
+                  onclick="document.getElementById('instrucciones').scrollIntoView({behavior: 'smooth'})"
+                >
+                
+                <div class="card" id="instrucciones">
+                  <h2>📱 Cómo Guardar la Imagen</h2>
+                  
+                  <p><span class="emoji">📲</span> <strong>Android:</strong></p>
+                  <p>Mantén presionada la imagen arriba y selecciona <strong>"Guardar imagen"</strong> o <strong>"Descargar imagen"</strong></p>
+                  
+                  <div class="divider"></div>
+                  
+                  <p><span class="emoji">📱</span> <strong>iPhone:</strong></p>
+                  <p>Mantén presionada la imagen arriba y selecciona <strong>"Añadir a Fotos"</strong> o <strong>"Guardar en Archivos"</strong></p>
+                  
+                  <div class="divider"></div>
+                  
+                  <a href="${dataUrl}" download="museo-angostura-resultado.png" class="btn">
+                    💾 Descargar Imagen
+                  </a>
+                  
+                  <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                    Si el botón no funciona, mantén presionada la imagen
+                  </p>
+                </div>
+              </div>
+            </body>
+            </html>
+          `);
+          
+          alert('✅ ¡Imagen lista!\n\n📱 Mantén presionada la imagen para guardarla.');
+        } else {
+          // MÉTODO 3: Descarga directa (fallback)
+          const link = document.createElement('a');
+          link.download = 'museo-resultado-' + Date.now() + '.png';
+          link.href = dataUrl;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          alert('✅ Descarga iniciada. Revisa tu carpeta de Descargas.');
+        }
 
-        alert(
-          '📸 Imagen descargada.\n\n' +
-          'Si tu navegador no permite compartir directo, ' +
-          'sube la imagen a tus redes manualmente.'
-        );
+        setGenerando(false);
       }, 'image/png', 1.0);
+
     } catch (error) {
-      console.error('Error al capturar imagen:', error);
-      alert('Error al generar la imagen. Intenta nuevamente.');
+      console.error('Error:', error);
+      alert('❌ Error: ' + error.message);
+      setGenerando(false);
     }
   };
 
   return (
     <>
-      {/* Contenedor oculto 1080x1920 para la tarjeta compartible */}
+      {/* Contenedor oculto con ShareableCard */}
       <div
         ref={shareableRef}
         style={{
-          position: 'absolute',
+          position: 'fixed',
           left: '-9999px',
-          top: 0,
+          top: '-9999px',
           width: '1080px',
-          height: '1920px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#E0F2FE'
+          height: '1080px',
+          zIndex: '-1'
         }}
       >
         <ShareableCard
           porcentaje={porcentaje}
           puntaje={resultado.puntajeObtenido}
           puntajeMaximo={resultado.puntajeMaximo}
-          nombreQuiz={location.state?.quiz?.titulo || 'Flora del Biobío'}
+          nombreQuiz={location.state?.quiz?.titulo || 'Quiz del Museo'}
           nickname={usuario?.nickname || 'Visitante'}
         />
       </div>
 
       {/* Vista normal de resultados */}
       <div className="min-h-screen gradient-sky flex flex-col items-center justify-center p-4">
-        {/* decoraciones de fondo */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <div className="absolute -top-10 left-10 text-4xl opacity-60 animate-bounce-soft">
-            ✨
-          </div>
-          <div className="absolute top-20 right-12 text-4xl opacity-60 animate-float-soft">
-            ⭐
-          </div>
-          <div className="absolute bottom-16 left-1/4 text-4xl opacity-60 animate-float-soft">
-            🌿
-          </div>
-        </div>
-
-        <div
-          ref={resultadoRef}
-          className="card max-w-2xl w-full space-y-6 relative motion-safe:animate-quibar-entrada"
-        >
-          {/* encabezado */}
+        <div className="card max-w-2xl w-full space-y-6 relative">
+          {/* Encabezado */}
           <div className="text-center space-y-4">
-            <div className= "text-6xl mb-1 drop-shadow-sm">
-              {porcentaje === 100
-                ? '🏆'
-                : porcentaje >= 80
-                ? '🎉'
-                : porcentaje >= 60
-                ? '😊'
-                : '💪'}
+            <div className="text-6xl mb-1">
+              {porcentaje === 100 ? '🏆' : porcentaje >= 80 ? '🎉' : porcentaje >= 60 ? '😊' : '💪'}
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-extrabold text-angostura-turquesa drop-shadow-sm">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-angostura-turquesa">
               ¡Quiz Completado!
             </h1>
 
-            <div className="mt-2">
-              <Quibar
-                size="lg"
-                animationVariant={quibarAnimation}
-                message={getMensaje()}
-              />
-            </div>
+            <Quibar
+              size="lg"
+              animationVariant={quibarAnimation}
+              message={getMensaje()}
+            />
 
             <div className="mt-3 bg-white/50 rounded-lg py-2 px-4 inline-block">
               <p className="text-sm font-bold text-angostura-turquesa">
                 🏛️ Museo Angostura del Biobío
               </p>
-              <p className="text-xs text-gray-600">
-                Patrimonio Natural y Cultural
-              </p>
             </div>
           </div>
 
-          {/* tarjeta de puntaje */}
-          <div className="bg-gradient-to-br from-angostura-amarillo/40 via-white/80 to-angostura-cielo/50 rounded-2xl p-6 text-center border-2 border-angostura-amarillo shadow-xl relative overflow-hidden">
-            <div className="pointer-events-none absolute -top-10 -right-10 w-32 h-32 bg-white/40 rounded-full blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-12 left-0 w-40 h-40 bg-angostura-cielo/40 rounded-full blur-3xl" />
-
-            <p className="text-gray-700 mb-1 text-sm font-semibold tracking-wide">
-              Tu puntuación
-            </p>
-            <p
-              className={`text-6xl font-extrabold ${getColor()} mb-1 drop-shadow-sm`}
-            >
+          {/* Tarjeta de puntaje */}
+          <div className="bg-gradient-to-br from-angostura-amarillo/40 via-white/80 to-angostura-cielo/50 rounded-2xl p-6 text-center border-2 border-angostura-amarillo shadow-xl">
+            <p className="text-gray-700 mb-1 text-sm font-semibold">Tu puntuación</p>
+            <p className={`text-6xl font-extrabold ${getColor()} mb-1`}>
               {resultado.puntajeObtenido}
             </p>
-            <p className="text-gray-700 text-sm">
-              de {resultado.puntajeMaximo} puntos
-            </p>
+            <p className="text-gray-700 text-sm">de {resultado.puntajeMaximo} puntos</p>
 
             <div className="mt-5 space-y-2">
               <div className="w-full h-4 bg-gray-200/80 rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-700 ease-out bg-gradient-to-r ${
-                    porcentaje >= 80
-                      ? 'from-green-400 via-emerald-400 to-lime-300'
-                      : porcentaje >= 60
-                      ? 'from-angostura-turquesa via-sky-400 to-cyan-300'
-                      : porcentaje >= 40
-                      ? 'from-yellow-400 via-amber-300 to-orange-300'
-                      : 'from-red-500 via-rose-500 to-orange-400'
+                  className={`h-full rounded-full transition-all duration-700 ${
+                    porcentaje >= 80 ? 'bg-green-500' : porcentaje >= 60 ? 'bg-angostura-turquesa' : 'bg-yellow-500'
                   }`}
                   style={{ width: `${porcentaje}%` }}
                 />
               </div>
-              <p className="text-2xl font-bold text-angostura-gris mt-1">
-                {porcentaje}%
-              </p>
+              <p className="text-2xl font-bold text-angostura-gris">{porcentaje}%</p>
             </div>
           </div>
 
-          {/* stats */}
+          {/* Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl p-4 text-center border border-gray-200 shadow-sm">
-              <p className="text-3xl font-extrabold text-angostura-turquesa drop-shadow-sm">
+            <div className="bg-white rounded-xl p-4 text-center border shadow-sm">
+              <p className="text-3xl font-extrabold text-angostura-turquesa">
                 {resultado.respuestasCorrectas}
               </p>
-              <p className="text-xs uppercase tracking-wide text-gray-500 mt-1">
-                Respuestas correctas
-              </p>
+              <p className="text-xs uppercase text-gray-500 mt-1">Respuestas correctas</p>
             </div>
 
-            <div className="bg-white rounded-xl p-4 text-center border border-gray-200 shadow-sm">
-              <p className="text-3xl font-extrabold text-angostura-turquesa drop-shadow-sm">
+            <div className="bg-white rounded-xl p-4 text-center border shadow-sm">
+              <p className="text-3xl font-extrabold text-angostura-turquesa">
                 {formatearTiempo(tiempoCompletado)}
               </p>
-              <p className="text-xs uppercase tracking-wide text-gray-500 mt-1">
-                Tiempo usado
-              </p>
+              <p className="text-xs uppercase text-gray-500 mt-1">Tiempo usado</p>
             </div>
           </div>
 
-          {/* info jugador */}
+          {/* Info jugador */}
           <div className="bg-angostura-cielo/25 rounded-xl p-4 text-center border border-angostura-cielo/60">
             <p className="text-sm text-gray-700">
-              Jugador:{' '}
-              <span className="font-bold text-angostura-turquesa">
-                {usuario?.nickname}
-              </span>
+              Jugador: <span className="font-bold text-angostura-turquesa">{usuario?.nickname}</span>
             </p>
-            <p className="text-xs text-gray-500 mt-1">
-              Tu puntuación ha sido guardada en el ranking
-            </p>
+            <p className="text-xs text-gray-500 mt-1">Tu puntuación ha sido guardada</p>
           </div>
 
-          {/* botón compartir/descargar */}
-          <div className="botones-compartir bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200 shadow-md">
+          {/* Botón compartir/descargar */}
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200 shadow-md">
             <p className="text-sm font-semibold text-gray-700 text-center mb-3">
               📱 ¡Comparte tu resultado!
             </p>
 
             <button
               onClick={capturarYDescargar}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-all duration-200 text-base font-bold hover:scale-105 shadow-lg mb-3"
+              disabled={generando}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-all font-bold hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
-              📥 Compartir / Descargar Imagen
+              {generando ? '⏳ Generando imagen...' : '📸 Compartir / Descargar'}
             </button>
 
-            <div className="mt-3 bg-angostura-amarillo/20 rounded-lg p-3 border border-angostura-amarillo/40">
-              <p className="text-xs text-gray-700 text-center leading-relaxed">
-                💡 <strong>Se generará una imagen hermosa</strong> con Quibar y
-                el logo del museo.
-                <br />
-                📱 En móviles compatibles se abrirá el panel para compartirla
-                directo en tus apps.
-              </p>
-            </div>
+            <p className="text-xs text-gray-600 text-center mt-3">
+              Se abrirá en una nueva pestaña donde podrás guardarla
+            </p>
           </div>
 
-          {/* acciones principales */}
-          <div className="acciones-principales space-y-3">
-            <button
-              onClick={() => navigate('/ranking')}
-              className="btn-primary w-full hover:scale-[1.02] transition-transform"
-            >
+          {/* Acciones */}
+          <div className="space-y-3">
+            <button onClick={() => navigate('/ranking')} className="btn-primary w-full">
               🏆 Ver Ranking
             </button>
 
-            <button
-              onClick={() => navigate('/quiz/lista')}
-              className="btn-secondary w-full hover:scale-[1.02] transition-transform"
-            >
+            <button onClick={() => navigate('/quiz/lista')} className="btn-secondary w-full">
               📚 Intentar otro Quiz
             </button>
 
-            <button
-              onClick={() => navigate('/')}
-              className="w-full py-3 px-6 rounded-lg text-angostura-turquesa hover:bg-gray-100 transition-all hover:scale-[1.01]"
-            >
+            <button onClick={() => navigate('/')} className="w-full py-3 px-6 rounded-lg text-angostura-turquesa hover:bg-gray-100 transition-all">
               🏠 Volver al Inicio
             </button>
           </div>
-
-          {porcentaje < 100 && (
-            <div className="bg-angostura-amarillo/20 rounded-lg p-4 border border-angostura-amarillo/60">
-              <p className="text-sm text-gray-700 text-center">
-                💡 ¡Intenta de nuevo para mejorar tu puntuación!
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </>
@@ -340,4 +387,3 @@ const QuizResultado = () => {
 };
 
 export default QuizResultado;
-

@@ -358,4 +358,77 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-
+-- Procedimiento almacenado para actualizar posiciones del ranking
+--
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `sp_actualizar_posiciones_ranking`$$
+
+CREATE PROCEDURE `sp_actualizar_posiciones_ranking`(IN p_quiz_id INT)
+BEGIN
+    -- Variable para contador de posición
+    SET @posicion := 0;
+    
+    -- Actualizar posiciones ordenando por puntaje DESC, tiempo ASC
+    UPDATE ranking r
+    INNER JOIN (
+        SELECT 
+            id,
+            (@posicion := @posicion + 1) AS nueva_posicion
+        FROM ranking
+        WHERE quiz_id = p_quiz_id
+        ORDER BY puntaje DESC, tiempo_segundos ASC
+    ) AS subquery ON r.id = subquery.id
+    SET r.posicion = subquery.nueva_posicion
+    WHERE r.quiz_id = p_quiz_id;
+    
+END$$
+
+DELIMITER ;
+
+--
+-- Trigger que actualiza el ranking automáticamente al finalizar una sesión
+--
+
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS `after_sesion_completada`$$
+
+CREATE TRIGGER `after_sesion_completada`
+AFTER UPDATE ON `sesiones_quiz`
+FOR EACH ROW
+BEGIN
+    -- Solo ejecutar si la sesión cambió de incompleta a completada
+    IF OLD.completado = 0 AND NEW.completado = 1 THEN
+        
+        -- Insertar registro en tabla ranking si no existe
+        INSERT INTO ranking (
+            sesion_id, 
+            usuario_id, 
+            quiz_id, 
+            puntaje, 
+            tiempo_segundos,
+            fecha_registro
+        ) VALUES (
+            NEW.id,
+            NEW.usuario_id,
+            NEW.quiz_id,
+            NEW.puntaje_total,
+            NEW.tiempo_total_segundos,
+            NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            puntaje = NEW.puntaje_total,
+            tiempo_segundos = NEW.tiempo_total_segundos;
+
+        -- Actualizar posiciones del ranking para este quiz
+        CALL sp_actualizar_posiciones_ranking(NEW.quiz_id);
+
+    END IF;
+END$$
+
+DELIMITER ;
+
 -- Dump completed on 2025-12-11 11:40:09

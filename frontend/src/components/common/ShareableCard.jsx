@@ -12,10 +12,10 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         fontFamily: 'system-ui, -apple-system, sans-serif',
         overflow: 'hidden',
         display: 'flex',
-        alignItems: 'flex-start',   // contenido pegado arriba
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingTop: '30px',         // pequeño margen superior
-        boxSizing: 'border-box'     // incluye padding en los 1080px
+        paddingTop: '30px',
+        boxSizing: 'border-box'
       }}
     >
       {/* Decoraciones de fondo */}
@@ -104,7 +104,7 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
           Patrimonio Natural y Cultural
         </p>
 
-        {/* Quibar - Mascota */}
+        {/* Quibar - Mascota con imagen */}
         <div style={{
           margin: '20px 0 24px 0',
           display: 'flex',
@@ -120,11 +120,10 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
               objectFit: 'contain',
               filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
             }}
-            crossOrigin="anonymous"
           />
         </div>
 
-        {/* Mensaje de Felicitación */}
+        {/* Mensaje de Felicitación CON DATOS REALES */}
         <div style={{
           background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
           padding: '28px 32px',
@@ -136,7 +135,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
           <div style={{
             fontSize: '40px',
             marginBottom: '10px'
-          }}>🎉</div>
+          }}>
+            {porcentaje >= 80 ? '🏆' : porcentaje >= 60 ? '🎉' : '💪'}
+          </div>
 
           <h2 style={{
             color: '#0891B2',
@@ -145,17 +146,36 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
             margin: '0 0 12px 0',
             lineHeight: '1.25'
           }}>
-            ¡Felicitaciones!
+            ¡Felicitaciones {nickname}!
           </h2>
 
           <p style={{
             color: '#374151',
             fontSize: '26px',
             fontWeight: '600',
-            margin: '0',
+            margin: '0 0 16px 0',
             lineHeight: '1.35'
           }}>
-            Has completado nuestro quiz educativo
+            Obtuviste {porcentaje}% en el quiz
+          </p>
+
+          <div style={{
+            fontSize: '60px',
+            fontWeight: '900',
+            color: porcentaje >= 80 ? '#059669' : porcentaje >= 60 ? '#0891B2' : '#F59E0B',
+            margin: '16px 0',
+            textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
+          }}>
+            {puntaje}/{puntajeMaximo}
+          </div>
+
+          <p style={{
+            color: '#6B7280',
+            fontSize: '20px',
+            fontWeight: '600',
+            margin: '0'
+          }}>
+            puntos
           </p>
         </div>
 

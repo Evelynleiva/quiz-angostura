@@ -5,6 +5,7 @@ import axios from 'axios';
 const AdminQuizForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
   
   const [quiz, setQuiz] = useState({
     titulo: '',
@@ -68,31 +69,42 @@ const AdminQuizForm = () => {
 
     try {
       const token = localStorage.getItem('adminToken');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
 
       // 1. Crear quiz
-      const quizRes = await axios.post('/api/quizzes', quiz, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
+      console.log('Creando quiz...', quiz);
+      const quizRes = await axios.post(`${API_URL}/quizzes`, quiz, config);
       const quizId = quizRes.data.id;
+      console.log('Quiz creado con ID:', quizId);
 
       // 2. Crear preguntas y respuestas
       for (const pregunta of preguntas) {
-        const preguntaRes = await axios.post(`/api/quizzes/${quizId}/preguntas`, {
-          texto_pregunta: pregunta.texto_pregunta,
-          puntos: pregunta.puntos,
-          orden: pregunta.orden
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        console.log('Creando pregunta...', pregunta.texto_pregunta);
+        
+        const preguntaRes = await axios.post(
+          `${API_URL}/quizzes/${quizId}/preguntas`,
+          {
+            texto_pregunta: pregunta.texto_pregunta,
+            puntos: pregunta.puntos,
+            orden: pregunta.orden
+          },
+          config
+        );
 
         const preguntaId = preguntaRes.data.id;
+        console.log('Pregunta creada con ID:', preguntaId);
 
         // 3. Crear respuestas
         for (const respuesta of pregunta.respuestas) {
-          await axios.post(`/api/quizzes/preguntas/${preguntaId}/respuestas`, respuesta, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          console.log('Creando respuesta...', respuesta.texto_respuesta);
+          
+          await axios.post(
+            `${API_URL}/quizzes/preguntas/${preguntaId}/respuestas`,
+            respuesta,
+            config
+          );
         }
       }
 
@@ -100,8 +112,11 @@ const AdminQuizForm = () => {
       navigate('/admin/quizzes');
 
     } catch (error) {
-      console.error('Error al crear quiz:', error);
-      alert('Error al crear quiz: ' + (error.response?.data?.error || error.message));
+      console.error('Error completo:', error);
+      console.error('Respuesta del servidor:', error.response?.data);
+      
+      const errorMsg = error.response?.data?.error || error.message;
+      alert('❌ Error al crear quiz: ' + errorMsg);
     } finally {
       setLoading(false);
     }
