@@ -177,5 +177,33 @@ router.get('/:sesionId', async (req, res) => {
     res.status(500).json({ error: 'Error al obtener sesión' });
   }
 });
+// Obtener todas las sesiones (para panel administrador)
+router.get('/', async (req, res) => {
+  try {
+    const [sesiones] = await pool.query(
+      `SELECT
+        sq.id,
+        sq.puntaje_total,
+        sq.tiempo_total_segundos,
+        sq.respuestas_correctas,
+        sq.respuestas_incorrectas,
+        sq.fecha_inicio,
+        sq.fecha_fin,
+        sq.completado,
+        q.titulo AS quiz_titulo,
+        u.nombre AS nickname
+       FROM sesiones_quiz sq
+       INNER JOIN quizzes q ON sq.quiz_id = q.id
+       INNER JOIN usuarios u ON sq.usuario_id = u.id
+       ORDER BY sq.fecha_inicio DESC`
+    );
+
+    res.json(sesiones);
+  } catch (error) {
+    console.error('Error al obtener todas las sesiones:', error);
+    res.status(500).json({ error: 'Error al obtener todas las sesiones' });
+  }
+});
+
 
 export default router;

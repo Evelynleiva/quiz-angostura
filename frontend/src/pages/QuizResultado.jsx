@@ -78,7 +78,7 @@ const QuizResultado = () => {
         useCORS: false,
         allowTaint: true,
         width: 1080,
-        height: 1080
+        height: 1920
       });
 
       // Ocultar

@@ -1,172 +1,201 @@
 # 🏛️ Sistema de Quiz Interactivo - Museo Angostura del Biobío
 
-Sistema web interactivo de quizzes educativos con códigos QR para mejorar la experiencia de visitantes del Museo Angostura del Biobío.
+Sistema web completo para quizzes educativos interactivos del Museo Angostura del Biobío, desarrollado como proyecto final de Analista Programador en AIEP.
 
-## 📋 Características Principales
+![Estado](https://img.shields.io/badge/Estado-Completo-brightgreen)
+![Version](https://img.shields.io/badge/Versión-1.0.0-blue)
+![Licencia](https://img.shields.io/badge/Licencia-MIT-yellow)
 
-- ✅ **Sistema de Quizzes Interactivos** con temporizador en tiempo real
-- ✅ **Códigos QR** para acceso directo desde dispositivos móviles
-- ✅ **Sistema de Ranking** con actualización automática de posiciones
-- ✅ **Panel de Administración** completo con CRUD de quizzes y preguntas
-- ✅ **Imagen Compartible** descargable de resultados (1080x1920px)
-- ✅ **Mascota Virtual "Quibar"** como guía interactiva
-- ✅ **Diseño Responsive** optimizado para móviles y tablets
+---
 
-## 🛠️ Stack Tecnológico
+## 📋 Tabla de Contenidos
+
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Uso](#uso)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [API Endpoints](#api-endpoints)
+- [Seguridad](#seguridad)
+- [Despliegue](#despliegue)
+- [Licencia](#licencia)
+
+---
+
+## ✨ Características
+
+### 🎮 Funcionalidades Principales
+
+- ✅ **Sistema de Quiz Completo**: Quizzes con múltiples preguntas y respuestas
+- ✅ **Códigos QR Dinámicos**: Generación automática de códigos QR para cada quiz
+- ✅ **Registro de Usuarios**: Sistema de nicknames sin autenticación compleja
+- ✅ **Ranking en Tiempo Real**: Tabla de clasificación actualizada automáticamente
+- ✅ **Resultados Compartibles**: Generación de imágenes con resultados para compartir
+- ✅ **Panel de Administración**: Gestión completa de quizzes, usuarios y estadísticas
+- ✅ **Responsive Design**: Funciona en desktop, tablet y móvil
+
+### 🛡️ Seguridad Implementada
+
+- ✅ **Helmet**: Headers HTTP seguros
+- ✅ **Rate Limiting**: Protección contra fuerza bruta (100 req/15min general, 5 req/15min login)
+- ✅ **CORS**: Configuración de orígenes permitidos
+- ✅ **HPP**: Protección contra HTTP Parameter Pollution
+- ✅ **JWT**: Autenticación con tokens (expiración 8h)
+- ✅ **bcrypt**: Hashing seguro de contraseñas
+- ✅ **Prepared Statements**: Prevención de SQL Injection
+
+### 🎨 Interfaz de Usuario
+
+- Diseño moderno con Tailwind CSS
+- Mascota "Quibar" 🦊 como guía interactivo
+- Animaciones y transiciones suaves
+- Feedback visual inmediato
+- Modo oscuro en resultados
+
+---
+
+## 🛠️ Tecnologías
 
 ### Backend
-- Node.js 18+
-- Express 4.18
-- MySQL 8.0
-- JWT para autenticación
-- bcrypt para hashing de contraseñas
-- QRCode para generación de códigos
+- **Node.js** v18+ con Express
+- **MySQL** 8.0+
+- **ES Modules** (import/export)
+- **JWT** para autenticación
+- **QRCode** para generación de códigos QR
+- **bcrypt** para hashing de contraseñas
 
 ### Frontend
-- React 18
-- Vite 5
-- React Router 6
-- Axios para peticiones HTTP
-- html2canvas para captura de imágenes
+- **React** 19.2.0 con Vite
+- **React Router DOM** para navegación
+- **Axios** para peticiones HTTP
+- **Tailwind CSS** para estilos
+- **html2canvas** para captura de imágenes
+- **html5-qrcode** para escaneo de QR
 
-### Seguridad
-- Helmet (headers HTTP seguros)
-- express-rate-limit (protección DDoS)
-- express-validator (validación de datos)
-- CORS configurado
+### Base de Datos
+- **MySQL** 8.0+
+- 9 tablas normalizadas (3FN)
+- Índices optimizados
+- Foreign Keys con CASCADE
+- Tabla de auditoría con JSON
+
+---
 
 ## 📦 Requisitos Previos
 
-Antes de instalar, asegúrate de tener:
+- Node.js v18.0.0 o superior
+- MySQL 8.0 o superior
+- npm o yarn
+- Git
 
-- **Node.js** >= 18.0.0
-- **npm** >= 9.0.0
-- **MySQL** >= 8.0.0
-
-Verificar instalaciones:
-```bash
-node --version
-npm --version
-mysql --version
-```
+---
 
 ## 🚀 Instalación
 
-### 1. Clonar o descargar el proyecto
+### 1. Clonar el repositorio
 ```bash
-# Con Git
-git clone <URL_REPOSITORIO>
-cd QuizAngostura
-
-# O descargar ZIP y descomprimir
+git clone https://github.com/Evelynleiva/quiz-angostura.git
+cd quiz-angostura
 ```
 
-### 2. Instalar dependencias del Backend
+### 2. Instalar dependencias
+
+**Backend:**
 ```bash
 cd backend
 npm install
 ```
 
-Dependencias instaladas:
-- express, mysql2, cors, dotenv
-- bcrypt, jsonwebtoken, qrcode
-- helmet, express-rate-limit, express-validator, hpp
-
-### 3. Instalar dependencias del Frontend
+**Frontend:**
 ```bash
-cd ../frontend
+cd frontend
 npm install
 ```
 
-Dependencias instaladas:
-- react, react-dom, react-router-dom
-- axios, html2canvas
+### 3. Configurar Base de Datos
 
-### 4. Configurar Base de Datos
-
-**Crear base de datos:**
+**Crear la base de datos:**
 ```bash
-mysql -u root -p
+mysql -u root -p < db/museo_quiz.sql
 ```
+
+O manualmente:
 ```sql
 CREATE DATABASE museo_quiz CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-EXIT;
+USE museo_quiz;
+SOURCE db/museo_quiz.sql;
 ```
 
-**Importar schema:**
-```bash
-mysql -u root -p museo_quiz < db/museo_quiz.sql
-```
+---
 
-### 5. Configurar Variables de Entorno
+## ⚙️ Configuración
 
-**Backend (.env):**
-```bash
-cd backend
-cp .env.example .env
-notepad .env
-```
+### Backend (.env)
 
-Editar con tus datos:
+Crea el archivo `backend/.env`:
 ```env
+# Servidor
 PORT=5000
+NODE_ENV=development
+
+# Base de Datos
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=tu_password_mysql
+DB_PASSWORD=tu_password
 DB_NAME=museo_quiz
 DB_PORT=3306
 
-JWT_SECRET=cambiar_en_produccion_por_cadena_aleatoria_larga
+# JWT
+JWT_SECRET=tu_clave_secreta_muy_larga_y_segura
 JWT_EXPIRES_IN=8h
 
+# Frontend
 FRONTEND_URL=http://localhost:5173
-NODE_ENV=development
 ```
 
-**Frontend (.env):**
-```bash
-cd ../frontend
-cp .env.example .env
-notepad .env
-```
+### Frontend (.env)
+
+Crea el archivo `frontend/.env`:
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-## ▶️ Ejecutar el Sistema
+---
 
-### Opción 1: Ambos servidores juntos (desde raíz)
+## 🎯 Uso
+
+### Inicio Rápido (Desarrollo)
+
+**Opción 1: Todo junto desde la raíz**
 ```bash
 npm run dev
 ```
 
-### Opción 2: Servidores por separado
+**Opción 2: Por separado**
 
-**Terminal 1 - Backend:**
+Terminal 1 - Backend:
 ```bash
 cd backend
 npm run dev
-# Servidor en http://localhost:5000
 ```
 
-**Terminal 2 - Frontend:**
+Terminal 2 - Frontend:
 ```bash
 cd frontend
 npm run dev
-# Aplicación en http://localhost:5173
 ```
 
-## 🔐 Acceso Inicial
+### Acceso
 
-### Panel de Administración
-- URL: `http://localhost:5173/admin`
-- Usuario: `admin@museo.cl`
-- Contraseña: `Admin123!`
+- **Frontend:** http://localhost:5173
+- **Backend:** http://localhost:5000
+- **Admin:** http://localhost:5173/admin/login
+  - Email: `admin@museo.cl`
+  - Password: `Admin123!`
 
-**⚠️ Importante:** Cambiar credenciales después del primer acceso.
-
-### Aplicación de Visitantes
-- URL: `http://localhost:5173`
+---
 
 ## 📁 Estructura del Proyecto
 ```
@@ -175,220 +204,245 @@ QuizAngostura/
 │   ├── config/
 │   │   └── database.js          # Conexión MySQL
 │   ├── middleware/
-│   │   ├── validation.js        # Validaciones express-validator
+│   │   ├── auth.js              # Middleware JWT
+│   │   ├── validation.js        # Validaciones
 │   │   ├── rateLimiter.js       # Rate limiting
-│   │   └── security.js          # Helmet + CORS
+│   │   └── security.js          # Seguridad general
 │   ├── routes/
-│   │   ├── auth.routes.js       # Autenticación admin
-│   │   ├── usuarios.routes.js   # Registro usuarios
-│   │   ├── quizzes.routes.js    # CRUD quizzes
+│   │   ├── auth.routes.js       # Autenticación
+│   │   ├── usuarios.routes.js   # Gestión usuarios
+│   │   ├── quizzes.routes.js    # Gestión quizzes
 │   │   ├── sesiones.routes.js   # Sesiones de juego
-│   │   ├── ranking.routes.js    # Sistema ranking
+│   │   ├── ranking.routes.js    # Rankings
 │   │   └── qr.routes.js         # Códigos QR
-│   ├── .env                     # Variables entorno
+│   ├── .env
 │   ├── server.js                # Servidor principal
 │   └── package.json
 │
 ├── frontend/
+│   ├── public/
+│   │   └── QUIBAR.png           # Mascota
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── admin/          # Componentes admin
-│   │   │   └── common/         # Componentes compartidos
+│   │   │   ├── common/          # Componentes reutilizables
+│   │   │   └── layout/          # Layout components
 │   │   ├── pages/
 │   │   │   ├── Home.jsx
-│   │   │   ├── QuizList.jsx
-│   │   │   ├── QuizPlay.jsx
+│   │   │   ├── QuizLista.jsx
+│   │   │   ├── QuizRegistro.jsx
+│   │   │   ├── QuizJugar.jsx
 │   │   │   ├── QuizResultado.jsx
 │   │   │   ├── Ranking.jsx
-│   │   │   └── AdminPanel.jsx
+│   │   │   ├── AdminLogin.jsx
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   ├── AdminQuizForm.jsx
+│   │   │   └── AdminQR.jsx
+│   │   ├── services/
+│   │   │   └── api.js           # Configuración Axios
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   ├── .env
 │   └── package.json
 │
 ├── db/
-│   └── museo_quiz.sql          # Schema base de datos
+│   └── museo_quiz.sql           # Schema de BD
 │
+├── CONFIGURAR_HOTSPOT.bat       # Script configuración IP
+├── INICIAR_SISTEMA.bat          # Script inicio rápido
 └── README.md
 ```
 
-## 🔌 API Endpoints Principales
+---
+
+## 🔌 API Endpoints
 
 ### Autenticación
 ```
-POST   /api/auth/login          # Login administrador
+POST   /api/auth/login           # Login administrador
+GET    /api/auth/verificar       # Verificar token
 ```
 
 ### Usuarios
 ```
-POST   /api/usuarios/registro   # Registro visitante
-GET    /api/usuarios            # Listar usuarios
+POST   /api/usuarios/registro    # Registrar visitante
+GET    /api/usuarios/buscar/:nickname
+GET    /api/usuarios             # Listar todos
 ```
 
 ### Quizzes
 ```
-GET    /api/quizzes             # Listar todos
-GET    /api/quizzes/:id         # Obtener uno
-POST   /api/quizzes             # Crear (admin)
-PUT    /api/quizzes/:id         # Actualizar (admin)
-DELETE /api/quizzes/:id         # Eliminar (admin)
+GET    /api/quizzes              # Listar activos
+GET    /api/quizzes/:id          # Obtener uno con preguntas
+POST   /api/quizzes              # Crear (admin)
+PUT    /api/quizzes/:id          # Actualizar (admin)
+DELETE /api/quizzes/:id          # Eliminar (admin)
+POST   /api/quizzes/:id/verificar # Verificar respuestas
 ```
 
 ### Sesiones
 ```
-POST   /api/sesiones/iniciar    # Iniciar sesión quiz
-POST   /api/sesiones/finalizar/:id  # Finalizar y calcular puntaje
+POST   /api/sesiones/iniciar     # Iniciar sesión
+POST   /api/sesiones/finalizar/:id # Finalizar sesión
+GET    /api/sesiones/usuario/:id # Por usuario
+GET    /api/sesiones             # Todas (admin)
 ```
 
 ### Ranking
 ```
-GET    /api/ranking             # Top ranking general
-GET    /api/ranking/:quizId     # Ranking por quiz
+GET    /api/ranking              # Top 10 global
+GET    /api/ranking/quiz/:id     # Por quiz
+GET    /api/ranking/usuario/:id  # Posición usuario
 ```
 
 ### Códigos QR
 ```
-GET    /api/qr                  # Listar códigos
-POST   /api/qr/generar          # Generar código nuevo
-POST   /api/qr/escanear/:codigo # Registrar escaneo
+GET    /api/qr                   # Listar todos
+POST   /api/qr/generar           # Generar nuevo
+POST   /api/qr/escanear/:codigo  # Registrar escaneo
+PATCH  /api/qr/:id/activar       # Activar
+PATCH  /api/qr/:id/desactivar    # Desactivar
+DELETE /api/qr/:id               # Eliminar
 ```
-
-## 🐛 Troubleshooting
-
-### Error: "Cannot connect to database"
-**Solución:**
-1. Verificar MySQL corriendo: `mysql -u root -p`
-2. Revisar credenciales en `.env`
-3. Verificar que base de datos existe
-
-### Error: "Port already in use"
-**Solución:**
-```bash
-# Windows
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
-
-# Linux/Mac
-lsof -ti:5000 | xargs kill -9
-```
-
-### Error: "Module not found"
-**Solución:**
-```bash
-cd backend && npm install
-cd ../frontend && npm install
-```
-
-### Frontend no carga datos
-**Solución:**
-1. Verificar backend corriendo en puerto 5000
-2. Revisar `VITE_API_URL` en frontend `.env`
-3. Verificar CORS en `backend/server.js`
-
-### Error de encoding (caracteres raros)
-**Solución:**
-1. Verificar charset BD: `utf8mb4`
-2. En conexión MySQL: `charset: 'utf8mb4'`
-
-## 🔒 Seguridad Implementada
-
-- ✅ **Helmet** - Headers HTTP seguros (CSP, HSTS)
-- ✅ **Rate Limiting** - Protección DDoS (100 req/15min)
-- ✅ **Validación de Datos** - express-validator en todos los inputs
-- ✅ **Sanitización** - Prevención XSS en inputs
-- ✅ **bcrypt** - Hashing seguro de contraseñas (10 rounds)
-- ✅ **JWT** - Tokens con expiración 8h
-- ✅ **Prepared Statements** - Prevención SQL injection
-- ✅ **CORS** - Orígenes permitidos configurados
-- ✅ **HPP** - Protección parameter pollution
-
-## 📊 Base de Datos
-
-### Tablas Principales (9)
-- `usuarios` - Visitantes registrados
-- `quizzes` - Quizzes disponibles
-- `preguntas` - Preguntas por quiz
-- `respuestas` - Opciones de respuesta
-- `sesiones_quiz` - Sesiones de juego
-- `ranking` - Tabla de posiciones
-- `codigos_qr` - Códigos QR generados
-- `administradores` - Usuarios admin
-- `logs_auditoria` - Registro de acciones
-
-### Comandos Útiles SQL
-```sql
--- Ver ranking
-SELECT * FROM ranking ORDER BY puntaje DESC, tiempo_segundos ASC LIMIT 10;
-
--- Limpiar ranking para demo
-DELETE FROM sesiones_quiz WHERE completado = 1;
-
--- Ver códigos QR activos
-SELECT * FROM codigos_qr WHERE activo = 1;
-```
-
-## 🚀 Deployment en Producción
-
-### Preparar Backend
-```bash
-cd backend
-npm install --production
-```
-
-### Compilar Frontend
-```bash
-cd frontend
-npm run build
-# Archivos en /dist
-```
-
-### Variables de Entorno Producción
-- Cambiar `JWT_SECRET` por cadena aleatoria segura (64+ caracteres)
-- Configurar `FRONTEND_URL` con dominio real
-- Usar usuario BD con permisos limitados
-- Configurar `NODE_ENV=production`
-
-### Recomendaciones
-- Usar **PM2** para gestión de procesos Node.js
-- Configurar **Nginx** como proxy inverso
-- Implementar **SSL/TLS** con Let's Encrypt
-- Configurar **backups automáticos** diarios de BD
-
-## 📝 Scripts Disponibles
-
-### Backend
-```bash
-npm run dev      # Desarrollo con nodemon
-npm start        # Producción
-```
-
-### Frontend
-```bash
-npm run dev      # Servidor desarrollo
-npm run build    # Build producción
-npm run preview  # Preview build
-```
-
-## 👥 Equipo de Desarrollo
-
-- **Evelyn** - Programación y arquitectura del sistema
-- **Felipe** - Documentación técnica e informe
-- **Belén** - Manual de usuario
-
-## 📄 Licencia
-
-Proyecto académico - Instituto Profesional AIEP  
-Analista Programador - 2025
-
-## 📞 Soporte
-
-Para problemas o consultas:
-- Revisar sección [Troubleshooting](#troubleshooting)
-- Consultar documentación técnica en `/docs`
-- Contactar al equipo de desarrollo
 
 ---
 
-**Última actualización:** Diciembre 2025
-**Versión:** 1.0.0  
-**Estado:** Producción
+## 🛡️ Seguridad
+
+### Medidas Implementadas
+
+1. **Helmet** - Headers HTTP seguros
+2. **Rate Limiting** - Prevención de ataques de fuerza bruta
+3. **CORS** - Configuración de orígenes permitidos
+4. **HPP** - Protección contra HTTP Parameter Pollution
+5. **JWT** - Tokens con expiración
+6. **bcrypt** - Hashing de contraseñas (salt rounds: 10)
+7. **Prepared Statements** - Prevención de SQL Injection
+8. **Validación de entrada** - express-validator
+
+### Configuración de Seguridad
+```javascript
+// Rate Limiting
+General: 100 requests / 15 minutos
+Login: 5 intentos / 15 minutos
+
+// JWT
+Expiración: 8 horas
+Algoritmo: HS256
+
+// bcrypt
+Salt rounds: 10
+```
+
+---
+
+## 🚀 Despliegue
+
+### Configuración para Red Local (Museo)
+
+**Para usar en red local con hotspot:**
+
+1. **Activar hotspot** en tu dispositivo
+2. **Conectar laptop** al hotspot
+3. **Ejecutar configuración:**
+```bash
+   CONFIGURAR_HOTSPOT.bat
+```
+4. **Ingresar IP** que muestre el script
+5. **Iniciar sistema:**
+```bash
+   INICIAR_SISTEMA.bat
+```
+
+### Despliegue en Producción
+
+**Backend (Railway/Render/Heroku):**
+1. Crear proyecto en plataforma
+2. Configurar variables de entorno
+3. Conectar base de datos MySQL
+4. Deploy desde GitHub
+
+**Frontend (Vercel/Netlify):**
+1. Conectar repositorio
+2. Configurar variable `VITE_API_URL`
+3. Build command: `npm run build`
+4. Output directory: `dist`
+
+---
+
+## 📊 Base de Datos
+
+### Tablas
+```sql
+administradores       # Cuentas admin
+usuarios              # Visitantes del museo
+quizzes               # Quizzes disponibles
+preguntas             # Preguntas de cada quiz
+respuestas            # Opciones de respuesta
+sesiones_quiz         # Sesiones de juego
+respuestas_usuario    # Respuestas dadas
+codigos_qr            # Códigos QR generados
+logs_auditoria        # Registro de acciones
+```
+
+### Normalización
+
+- ✅ Primera Forma Normal (1FN)
+- ✅ Segunda Forma Normal (2FN)
+- ✅ Tercera Forma Normal (3FN)
+
+---
+
+## 🧪 Testing
+
+### Plan de Pruebas
+
+- ✅ 30 casos de prueba documentados
+- ✅ 29 exitosos (96.7%)
+- ✅ Cobertura: funcionalidad, seguridad, UI/UX
+
+### Ejecutar Pruebas
+```bash
+# Backend
+cd backend
+npm test
+
+# Frontend
+cd frontend
+npm test
+```
+
+---
+
+## 📈 Métricas del Sistema
+
+- **Código Backend:** ~800 líneas
+- **Código Frontend:** ~2,500 líneas
+- **Total:** ~3,300 líneas
+- **API Endpoints:** 25
+- **Tablas BD:** 9
+- **Índices optimizados:** 15+
+
+---
+
+**Equipo:**
+- Evelyn Leiva - Programación
+- Felipe - Documentación Técnica
+- Belén - Manual de Usuario
+
+---
+
+## 📞 Contacto
+
+- **GitHub:** [@Evelynleiva](https://github.com/Evelynleiva)
+- **Proyecto:** [quiz-angostura](https://github.com/Evelynleiva/quiz-angostura)
+
+---
+
+## 📝 Licencia
+
+MIT License - ver archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+
+🦊 *"Aprende jugando con Quibar"*
