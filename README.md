@@ -1,6 +1,6 @@
 # 🏛️ Sistema de Quiz Interactivo - Museo Angostura del Biobío
 
-Sistema web completo para quizzes educativos interactivos del Museo Angostura del Biobío, desarrollado como proyecto final de Analista Programador en AIEP.
+Sistema web completo para quizzes educativos interactivos del Museo Angostura del Biobío, desarrollado como proyecto final de Analista Programador en Inacap
 
 ![Estado](https://img.shields.io/badge/Estado-Completo-brightgreen)
 ![Version](https://img.shields.io/badge/Versión-1.0.0-blue)
