@@ -46,7 +46,7 @@ const QuizResultado = () => {
   const quibarAnimation =
     porcentaje >= 80 ? 'celebra' : porcentaje >= 40 ? 'idle' : 'float';
 
-  // VERSIÓN FINAL - LA MÁS EFECTIVA
+  // CAPTURA DE IMAGEN CORREGIDA
   const capturarYDescargar = async () => {
     if (generando) return;
     
@@ -60,14 +60,14 @@ const QuizResultado = () => {
         return;
       }
 
-      // Hacer visible
+      // Hacer visible EXACTAMENTE en el tamaño correcto
       shareableElement.style.position = 'fixed';
-      shareableElement.style.left = '50%';
-      shareableElement.style.top = '50%';
-      shareableElement.style.transform = 'translate(-50%, -50%) scale(0.3)';
+      shareableElement.style.left = '0';
+      shareableElement.style.top = '0';
       shareableElement.style.zIndex = '9999';
       shareableElement.style.width = '1080px';
-      shareableElement.style.height = '1080px';
+      shareableElement.style.height = '1920px';
+      shareableElement.style.overflow = 'hidden';
 
       await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -78,14 +78,17 @@ const QuizResultado = () => {
         useCORS: false,
         allowTaint: true,
         width: 1080,
-        height: 1920
+        height: 1920,
+        windowWidth: 1080,
+        windowHeight: 1920,
+        x: 0,
+        y: 0
       });
 
       // Ocultar
       shareableElement.style.position = 'fixed';
       shareableElement.style.left = '-9999px';
       shareableElement.style.top = '-9999px';
-      shareableElement.style.transform = 'none';
       shareableElement.style.zIndex = '-1';
 
       canvas.toBlob(async (blob) => {
@@ -97,7 +100,7 @@ const QuizResultado = () => {
 
         const file = new File([blob], 'museo-resultado.png', { type: 'image/png' });
 
-        // MÉTODO 1: Compartir nativo (mejor en móviles modernos)
+        // MÉTODO 1: Compartir nativo
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
             await navigator.share({
@@ -115,7 +118,7 @@ const QuizResultado = () => {
           }
         }
 
-        // MÉTODO 2: Abrir en nueva pestaña (universal, siempre funciona)
+        // MÉTODO 2: Abrir en nueva pestaña
         const dataUrl = canvas.toDataURL('image/png', 1.0);
         const newWindow = window.open('', '_blank');
         
@@ -130,14 +133,13 @@ const QuizResultado = () => {
               <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body {
-                  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                  background: #1e293b;
                   display: flex;
                   flex-direction: column;
                   align-items: center;
                   justify-content: center;
                   min-height: 100vh;
                   padding: 20px;
-                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 }
                 .container {
                   max-width: 600px;
@@ -150,7 +152,7 @@ const QuizResultado = () => {
                   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
                   border-radius: 12px;
                   margin-bottom: 24px;
-                  cursor: pointer;
+                  display: block;
                 }
                 .card {
                   background: rgba(255, 255, 255, 0.1);
@@ -165,14 +167,15 @@ const QuizResultado = () => {
                   font-size: 24px;
                   margin-bottom: 16px;
                   font-weight: 800;
+                  font-family: system-ui, sans-serif;
                 }
                 p {
                   color: rgba(255, 255, 255, 0.9);
                   font-size: 16px;
                   line-height: 1.6;
                   margin-bottom: 12px;
+                  font-family: system-ui, sans-serif;
                 }
-                .emoji { font-size: 24px; }
                 .btn {
                   display: inline-block;
                   margin-top: 16px;
@@ -183,10 +186,8 @@ const QuizResultado = () => {
                   border-radius: 12px;
                   font-weight: bold;
                   font-size: 18px;
-                  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
-                  transition: transform 0.2s;
+                  font-family: system-ui, sans-serif;
                 }
-                .btn:active { transform: scale(0.95); }
                 .divider {
                   height: 1px;
                   background: rgba(255, 255, 255, 0.2);
@@ -196,42 +197,33 @@ const QuizResultado = () => {
             </head>
             <body>
               <div class="container">
-                <img 
-                  src="${dataUrl}" 
-                  alt="Tu resultado" 
-                  id="resultImg"
-                  onclick="document.getElementById('instrucciones').scrollIntoView({behavior: 'smooth'})"
-                >
+                <img src="${dataUrl}" alt="Tu resultado">
                 
-                <div class="card" id="instrucciones">
+                <div class="card">
                   <h2>📱 Cómo Guardar la Imagen</h2>
                   
-                  <p><span class="emoji">📲</span> <strong>Android:</strong></p>
-                  <p>Mantén presionada la imagen arriba y selecciona <strong>"Guardar imagen"</strong> o <strong>"Descargar imagen"</strong></p>
+                  <p><strong>📲 Android:</strong></p>
+                  <p>Mantén presionada la imagen y selecciona "Guardar imagen"</p>
                   
                   <div class="divider"></div>
                   
-                  <p><span class="emoji">📱</span> <strong>iPhone:</strong></p>
-                  <p>Mantén presionada la imagen arriba y selecciona <strong>"Añadir a Fotos"</strong> o <strong>"Guardar en Archivos"</strong></p>
+                  <p><strong>📱 iPhone:</strong></p>
+                  <p>Mantén presionada la imagen y selecciona "Añadir a Fotos"</p>
                   
                   <div class="divider"></div>
                   
                   <a href="${dataUrl}" download="museo-angostura-resultado.png" class="btn">
                     💾 Descargar Imagen
                   </a>
-                  
-                  <p style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
-                    Si el botón no funciona, mantén presionada la imagen
-                  </p>
                 </div>
               </div>
             </body>
             </html>
           `);
           
-          alert('✅ ¡Imagen lista!\n\n📱 Mantén presionada la imagen para guardarla.');
+          alert('✅ ¡Imagen lista! Mantén presionada para guardar.');
         } else {
-          // MÉTODO 3: Descarga directa (fallback)
+          // MÉTODO 3: Descarga directa
           const link = document.createElement('a');
           link.download = 'museo-resultado-' + Date.now() + '.png';
           link.href = dataUrl;
@@ -239,7 +231,7 @@ const QuizResultado = () => {
           link.click();
           document.body.removeChild(link);
           
-          alert('✅ Descarga iniciada. Revisa tu carpeta de Descargas.');
+          alert('✅ Descarga iniciada.');
         }
 
         setGenerando(false);
@@ -262,7 +254,7 @@ const QuizResultado = () => {
           left: '-9999px',
           top: '-9999px',
           width: '1080px',
-          height: '1080px',
+          height: '1920px',
           zIndex: '-1'
         }}
       >

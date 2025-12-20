@@ -51,7 +51,7 @@ router.post('/generar', async (req, res) => {
     const codigo = `QUIZ-${quizId}-${Date.now()}`;
     
     // URL de destino - CORREGIDA PARA HOTSPOT
-    const urlDestino = `http://10.215.93.231:5173/quiz/${quizId}/registro`;
+    const urlDestino = `http://10.66.49.132:5173/quiz/${quizId}/registro`;
 
     console.log('5. URL generada:', urlDestino);
 

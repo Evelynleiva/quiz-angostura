@@ -30,7 +30,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/codigos-qr" element={<AdminQR />} />
         <Route path="/admin/quizzes" element={<AdminQuizzes />} />
-        <Route path="/admin/quizzes/nuevo" element={<AdminQuizForm />} />
+        <Route path="/admin/quiz/nuevo" element={<AdminQuizForm />} />
         <Route path="/admin/quizzes/editar/:id" element={<AdminQuizForm />} />
       </Routes>
     </Router>

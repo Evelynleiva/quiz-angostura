@@ -5,11 +5,29 @@ import pool from '../config/database.js';
 
 const router = express.Router();
 
+// Middleware para verificar token de admin
+export const verificarAdmin = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token no proporcionado' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.adminId = decoded.id;
+    req.admin = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Token inválido o expirado' });
+  }
+};
+
 // Login de administrador
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('📧 Login attempt:', email);
+    console.log('📧 Intento de login:', email);
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
@@ -26,8 +44,7 @@ router.post('/login', async (req, res) => {
     }
 
     const admin = admins[0];
-
-    console.log('👤 Admin found:', admin.email);
+    console.log('👤 Admin encontrado:', admin.email);
 
     // Verificar contraseña
     const passwordMatch = await bcrypt.compare(password, admin.password);
@@ -43,6 +60,8 @@ router.post('/login', async (req, res) => {
       { expiresIn: '8h' }
     );
 
+    console.log('✅ Login exitoso para:', admin.email);
+
     res.json({
       token,
       admin: {
@@ -54,26 +73,52 @@ router.post('/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error en login:', error);
+    console.error('❌ Error en login:', error);
     res.status(500).json({ error: 'Error al iniciar sesión' });
   }
 });
 
-// Middleware para verificar token
-export const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+// Verificar token
+router.get('/verificar', verificarAdmin, (req, res) => {
+  res.json({ 
+    valido: true,
+    admin: req.admin
+  });
+});
 
-  if (!token) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
-  }
-
+// Obtener estadísticas del dashboard
+router.get('/admin/estadisticas', verificarAdmin, async (req, res) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.adminId = decoded.id;
-    next();
+    console.log('📊 Obteniendo estadísticas...');
+
+    // Total de quizzes activos
+    const [quizzes] = await pool.query(
+      'SELECT COUNT(*) as total FROM quizzes WHERE activo = 1'
+    );
+
+    // Total de usuarios registrados
+    const [usuarios] = await pool.query(
+      'SELECT COUNT(*) as total FROM usuarios'
+    );
+
+    // Total de sesiones completadas
+    const [sesiones] = await pool.query(
+      'SELECT COUNT(*) as total FROM sesiones_quiz WHERE completada = 1'
+    );
+
+    const stats = {
+      totalQuizzes: quizzes[0].total,
+      totalUsuarios: usuarios[0].total,
+      sesionesCompletadas: sesiones[0].total
+    };
+
+    console.log('✅ Estadísticas:', stats);
+
+    res.json(stats);
   } catch (error) {
-    return res.status(401).json({ error: 'Token inválido' });
+    console.error('❌ Error al obtener estadísticas:', error);
+    res.status(500).json({ error: 'Error al obtener estadísticas' });
   }
-};
+});
 
 export default router;

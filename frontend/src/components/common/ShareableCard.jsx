@@ -6,7 +6,7 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
       id="shareable-card"
       style={{
         width: '1080px',
-        height: '1350px', // antes 1920px
+        height: '1920px',
         background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 50%, #7DD3FC 100%)',
         position: 'relative',
         fontFamily: 'system-ui, -apple-system, sans-serif',
@@ -15,17 +15,17 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         alignItems: 'center',
         justifyContent: 'center',
         boxSizing: 'border-box',
-        padding: '60px 60px' // menos padding vertical
+        padding: '80px 60px'
       }}
     >
       {/* Decoraciones de fondo */}
       <div
         style={{
           position: 'absolute',
-          top: '-80px',
-          right: '-80px',
-          width: '320px',
-          height: '320px',
+          top: '-100px',
+          right: '-100px',
+          width: '400px',
+          height: '400px',
           background: 'radial-gradient(circle, rgba(250,204,21,0.3) 0%, transparent 70%)',
           borderRadius: '50%'
         }}
@@ -34,10 +34,10 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
       <div
         style={{
           position: 'absolute',
-          bottom: '-120px',
-          left: '-120px',
-          width: '420px',
-          height: '420px',
+          bottom: '-150px',
+          left: '-150px',
+          width: '500px',
+          height: '500px',
           background: 'radial-gradient(circle, rgba(14,165,233,0.3) 0%, transparent 70%)',
           borderRadius: '50%'
         }}
@@ -47,9 +47,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
       <div
         style={{
           position: 'absolute',
-          top: '70px',
-          left: '80px',
-          fontSize: '70px',
+          top: '100px',
+          left: '100px',
+          fontSize: '80px',
           opacity: '0.4'
         }}
       >
@@ -58,9 +58,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
       <div
         style={{
           position: 'absolute',
-          top: '150px',
-          right: '100px',
-          fontSize: '60px',
+          top: '200px',
+          right: '120px',
+          fontSize: '70px',
           opacity: '0.4'
         }}
       >
@@ -69,9 +69,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
       <div
         style={{
           position: 'absolute',
-          bottom: '320px',
-          left: '120px',
-          fontSize: '65px',
+          bottom: '400px',
+          left: '140px',
+          fontSize: '75px',
           opacity: '0.4'
         }}
       >
@@ -80,9 +80,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
       <div
         style={{
           position: 'absolute',
-          bottom: '380px',
-          right: '150px',
-          fontSize: '60px',
+          bottom: '500px',
+          right: '180px',
+          fontSize: '70px',
           opacity: '0.4'
         }}
       >
@@ -105,8 +105,8 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         {/* Logo del Museo */}
         <div
           style={{
-            fontSize: '80px',
-            marginBottom: '20px',
+            fontSize: '100px',
+            marginBottom: '30px',
             filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
           }}
         >
@@ -116,9 +116,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         <h1
           style={{
             color: '#0891B2',
-            fontSize: '48px',
+            fontSize: '58px',
             fontWeight: '900',
-            margin: '0 0 15px 0',
+            margin: '0 0 20px 0',
             textShadow: '3px 3px 6px rgba(0,0,0,0.1)',
             lineHeight: '1.2'
           }}
@@ -131,9 +131,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         <p
           style={{
             color: '#06B6D4',
-            fontSize: '30px',
+            fontSize: '34px',
             fontWeight: '700',
-            margin: '0 0 35px 0'
+            margin: '0 0 50px 0'
           }}
         >
           Patrimonio Natural y Cultural
@@ -142,7 +142,7 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         {/* Quibar - Mascota */}
         <div
           style={{
-            margin: '25px 0 35px 0',
+            margin: '40px 0 50px 0',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
@@ -152,8 +152,8 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
             src="/QUIBAR.png"
             alt="Quibar"
             style={{
-              width: '260px',
-              height: '260px',
+              width: '320px',
+              height: '320px',
               objectFit: 'contain',
               filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.2))'
             }}
@@ -164,20 +164,20 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         <div
           style={{
             background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
-            padding: '35px 40px',
-            borderRadius: '28px',
-            margin: '0 0 30px 0',
-            border: '4px solid #FBBF24',
+            padding: '50px 50px',
+            borderRadius: '32px',
+            margin: '0 0 40px 0',
+            border: '5px solid #FBBF24',
             boxShadow: '0 12px 32px rgba(251,191,36,0.4)',
             width: '100%',
-            maxWidth: '860px',
+            maxWidth: '900px',
             boxSizing: 'border-box'
           }}
         >
           <div
             style={{
-              fontSize: '60px',
-              marginBottom: '15px'
+              fontSize: '70px',
+              marginBottom: '20px'
             }}
           >
             {porcentaje >= 80 ? '🏆' : porcentaje >= 60 ? '🎉' : '💪'}
@@ -186,9 +186,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
           <h2
             style={{
               color: '#0891B2',
-              fontSize: '44px',
+              fontSize: '52px',
               fontWeight: '900',
-              margin: '0 0 18px 0',
+              margin: '0 0 25px 0',
               lineHeight: '1.2'
             }}
           >
@@ -200,23 +200,24 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
           <p
             style={{
               color: '#374151',
-              fontSize: '32px',
+              fontSize: '38px',
               fontWeight: '700',
-              margin: '0 0 22px 0',
+              margin: '0 0 30px 0',
               lineHeight: '1.3'
             }}
           >
-            Obtuviste {porcentaje}%<br />
+            Obtuviste {porcentaje}%
+            <br />
             en el quiz
           </p>
 
           <div
             style={{
-              fontSize: '72px',
+              fontSize: '90px',
               fontWeight: '900',
               color:
                 porcentaje >= 80 ? '#059669' : porcentaje >= 60 ? '#0891B2' : '#F59E0B',
-              margin: '18px 0',
+              margin: '25px 0',
               textShadow: '4px 4px 8px rgba(0,0,0,0.15)'
             }}
           >
@@ -226,7 +227,7 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
           <p
             style={{
               color: '#6B7280',
-              fontSize: '26px',
+              fontSize: '30px',
               fontWeight: '600',
               margin: '0'
             }}
@@ -239,20 +240,20 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         <div
           style={{
             background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%)',
-            padding: '30px 40px',
-            borderRadius: '28px',
+            padding: '40px 50px',
+            borderRadius: '32px',
             boxShadow: '0 12px 32px rgba(251,191,36,0.4)',
             width: '100%',
-            maxWidth: '860px',
+            maxWidth: '900px',
             boxSizing: 'border-box'
           }}
         >
           <p
             style={{
               color: 'white',
-              fontSize: '36px',
+              fontSize: '42px',
               fontWeight: '800',
-              margin: '0 0 10px 0',
+              margin: '0 0 15px 0',
               textShadow: '3px 3px 6px rgba(0,0,0,0.25)',
               lineHeight: '1.25'
             }}
@@ -264,7 +265,7 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
           <p
             style={{
               color: 'rgba(255,255,255,0.95)',
-              fontSize: '28px',
+              fontSize: '32px',
               margin: '0',
               fontWeight: '600',
               lineHeight: '1.4'
@@ -279,9 +280,9 @@ const ShareableCard = ({ porcentaje, puntaje, puntajeMaximo, nombreQuiz, nicknam
         {/* Marca de agua */}
         <div
           style={{
-            marginTop: '35px',
+            marginTop: '60px',
             color: 'rgba(0,0,0,0.5)',
-            fontSize: '22px',
+            fontSize: '26px',
             fontWeight: '700'
           }}
         >

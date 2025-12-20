@@ -425,9 +425,9 @@ npm test
 ---
 
 **Equipo:**
-- Evelyn Leiva - Programación
-- Felipe - Documentación Técnica
-- Belén - Manual de Usuario
+- Evelyn Leiva 
+- Felipe 
+- Belen
 
 ---
 
