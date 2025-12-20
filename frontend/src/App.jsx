@@ -18,6 +18,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Rutas públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/quiz/lista" element={<QuizList />} />
         <Route path="/quiz/:quizId/registro" element={<QuizRegistro />} />
@@ -26,11 +27,12 @@ function App() {
         <Route path="/ranking" element={<Ranking />} />
         <Route path="/quiz/escanear" element={<QRScanner />} />
 
+        {/* Rutas Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/codigos-qr" element={<AdminQR />} />
         <Route path="/admin/quizzes" element={<AdminQuizzes />} />
-        <Route path="/admin/quiz/nuevo" element={<AdminQuizForm />} />
+        <Route path="/admin/quizzes/nuevo" element={<AdminQuizForm />} />
         <Route path="/admin/quizzes/editar/:id" element={<AdminQuizForm />} />
       </Routes>
     </Router>
