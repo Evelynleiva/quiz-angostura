@@ -1,52 +1,28 @@
-# Presentación del proyecto para portafolio
+# Quiz Museo Angostura
 
-## Quiz interactivo — Museo Angostura del Biobío
+Este proyecto lo desarrollamos como trabajo final de Analista Programador en INACAP. La idea era que las personas que visitan el Museo Angostura del Biobío pudieran responder preguntas relacionadas con el recorrido desde su celular.
 
-Proyecto académico de Analista Programador orientado a ofrecer una experiencia educativa mediante cuestionarios accesibles desde códigos QR. El sistema está planteado para visitantes que responden preguntas desde sus dispositivos y para administradores que gestionan el contenido.
+Para acceder a los cuestionarios se utilizan códigos QR. Los visitantes pueden ingresar con un apodo, responder preguntas, ver sus resultados y consultar el ranking. El sistema también contempla un panel de administración para gestionar los cuestionarios.
 
-## Problema y propuesta
+## Tecnologías
 
-El proyecto busca hacer más interactiva la visita al museo. La propuesta consiste en asociar cuestionarios a códigos QR, registrar respuestas, calcular resultados y mostrar clasificaciones.
+- React y Vite para el frontend
+- Node.js y Express para el backend
+- MySQL para guardar la información
+- JWT para la autenticación del administrador
 
-## Tecnologías documentadas
+## Organización
 
-- **Frontend:** React, Vite, React Router, Axios y Tailwind CSS.
-- **Backend:** Node.js, Express y API HTTP.
-- **Base de datos:** MySQL.
-- **Autenticación y seguridad:** JWT, bcrypt y middleware de protección descritos en el README principal.
+El repositorio está dividido en `frontend`, `backend` y `db`. El frontend se comunica con el backend mediante una API. En el backend se encuentran las rutas de usuarios, cuestionarios, sesiones, ranking y códigos QR.
 
-> Esta ficha resume la documentación del repositorio. No equivale a una auditoría del código ni certifica que todas las funciones estén operativas en un despliegue actual.
+## Instalación
 
-## Funcionalidades descritas en el proyecto
+Las instrucciones de instalación y las variables de entorno están en el [README principal](../README.md).
 
-- Acceso a cuestionarios mediante códigos QR.
-- Registro de visitantes mediante apodos.
-- Preguntas y respuestas con cálculo de resultados.
-- Ranking y resultados para compartir.
-- Panel administrativo para gestionar cuestionarios.
+## Equipo
 
-## Arquitectura general
+Fue un proyecto académico grupal. Los integrantes están indicados en el README principal.
 
-El frontend presenta las interfaces de visitantes y administración. El backend expone rutas para autenticación, usuarios, cuestionarios, sesiones, ranking y códigos QR. MySQL almacena la información de la aplicación.
+## Notas
 
-## Contexto de desarrollo
-
-Trabajo académico realizado en equipo. Antes de atribuir responsabilidades individuales en un CV o entrevista, se debe especificar qué componentes implementó cada integrante.
-
-## Cómo explorar el proyecto
-
-Consulta el [README principal](../README.md) para requisitos, instalación, variables de entorno, rutas y estructura del proyecto.
-
-**Precauciones:** utiliza credenciales de prueba propias; no reutilices contraseñas de ejemplo ni publiques archivos `.env` con secretos.
-
-## Pendientes de verificación antes de usarlo como demostración laboral
-
-- Ejecutar instalación, base de datos, frontend y backend en un entorno limpio.
-- Comprobar las funciones principales y registrar evidencias visuales.
-- Confirmar los comandos de pruebas disponibles: el README menciona `npm test`, pero su ejecución debe validarse contra los scripts de cada `package.json`.
-- Revisar las cifras y afirmaciones de cobertura, rendimiento y seguridad del README con evidencia verificable.
-- Precisar el aporte individual de cada participante.
-
-## Enfoque profesional
-
-Este proyecto permite conversar sobre integración frontend/backend, diseño de API, persistencia de datos, flujos de usuario y documentación técnica. Para entrevistas de QA también puede servir como base para elaborar casos de prueba y reportes de defectos, una vez ejecutada la aplicación.
+El README principal incluye cifras de pruebas y comandos `npm test` que aún no se han contrastado con una ejecución reciente. Los archivos `package.json` consultados no incluyen un script `test`, así que esos comandos no deben considerarse verificados.
