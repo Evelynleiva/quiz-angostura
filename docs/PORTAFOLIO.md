@@ -1,28 +1,28 @@
-# Quiz Museo Angostura
+# Quiz Angostura
 
-Este proyecto lo desarrollamos como trabajo final de Analista Programador en INACAP. La idea era que las personas que visitan el Museo Angostura del Biobío pudieran responder preguntas relacionadas con el recorrido desde su celular.
+**Quiz Angostura** es un proyecto de aula que desarrollamos en equipo como trabajo final de Analista Programador en INACAP.
 
-Para acceder a los cuestionarios se utilizan códigos QR. Los visitantes pueden ingresar con un apodo, responder preguntas, ver sus resultados y consultar el ranking. El sistema también contempla un panel de administración para gestionar los cuestionarios.
+Creamos una aplicación interactiva para el Museo Angostura del Biobío. La idea fue que los visitantes pudieran participar desde sus celulares escaneando códigos QR ubicados durante el recorrido.
 
-## Tecnologías
+Al ingresar, cada visitante puede utilizar un apodo, participar en el quiz, revisar sus resultados y consultar el ranking. También desarrollamos un panel de administración para gestionar el contenido.
 
-- React y Vite para el frontend
+## Tecnologías utilizadas
+
+- React y Vite para la interfaz
 - Node.js y Express para el backend
-- MySQL para guardar la información
-- JWT para la autenticación del administrador
+- MySQL para almacenar los datos
+- JWT para la autenticación administrativa
 
-## Organización
+## Organización del proyecto
 
-El repositorio está dividido en `frontend`, `backend` y `db`. El frontend se comunica con el backend mediante una API. En el backend se encuentran las rutas de usuarios, cuestionarios, sesiones, ranking y códigos QR.
+El repositorio contiene las carpetas `frontend`, `backend` y `db`. El frontend se comunica con el backend mediante una API. En el backend se encuentran las rutas de usuarios, quizzes, sesiones, ranking y códigos QR.
 
-## Instalación
+## Funcionamiento
 
-Las instrucciones de instalación y las variables de entorno están en el [README principal](../README.md).
+El proyecto se desarrolló y utilizó en un entorno local. **Es una aplicación funcional que no se publicó en un servidor público.**
+
+Las instrucciones de instalación y configuración se encuentran en el [README principal](../README.md).
 
 ## Equipo
 
-Fue un proyecto académico grupal. Los integrantes están indicados en el README principal.
-
-## Notas
-
-El README principal incluye cifras de pruebas y comandos `npm test` que aún no se han contrastado con una ejecución reciente. Los archivos `package.json` consultados no incluyen un script `test`, así que esos comandos no deben considerarse verificados.
+Proyecto académico grupal. Los integrantes están identificados en el README principal.
